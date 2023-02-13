@@ -1,12 +1,13 @@
 <template>
   <div v-if="isMounted && isFieldVisible(field) && field.id">
     <component :is="getLabelType(field)" class="label" />
-    <label :for="field.id" class="block text-sm font-medium text-gray-700">
+    <label
+      v-if="field.label && field.type !== 'switch'"
+      :for="field.id"
+      class="block text-sm font-medium text-gray-700"
+    >
       {{ field.label }}
     </label>
-    <p class="text-gray-500">
-      {{ field.description }}
-    </p>
     <div v-if="field.type == 'file'">
       <FileUpload
         :name="`${field.id}`"
@@ -37,6 +38,33 @@
       <p v-if="state.uploadErrors[field.id]" class="mt-2 text-red-600">
         {{ state.uploadErrors[field.id] }}
       </p>
+    </div>
+    <div v-if="field.type == 'switch'">
+      <div class="flex items-start">
+        <div class="flex items-center h-5">
+          <InputSwitch
+            v-model="localValue"
+            :value="localValue"
+            :name="field.id"
+            :required="field.required"
+            :class="{
+              'input w-full': field.type != 'switch' ? true : false,
+              'p-invalid': state.errors[field.id],
+            }"
+            :trueValue="1"
+            :falseValue="0"
+            class="dark:bg-slate-900 dark:border-none"
+          />
+        </div>
+        <div class="ml-3 text-sm">
+          <label for="offers" class="font-medium text-gray-700">{{
+            field.label
+          }}</label>
+          <p class="text-gray-500">
+            {{ field.placeholder }}
+          </p>
+        </div>
+      </div>
     </div>
     <div v-else-if="field.type === 'radio'">
       <div
@@ -97,6 +125,9 @@
         {{ state.errors[field.id] }}
       </span>
     </div>
+    <p v-if="field.hint" class="mt-2 text-sm italic text-gray-500">
+      {{ field.hint }}
+    </p>
   </div>
 </template>
 

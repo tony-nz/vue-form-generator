@@ -5,7 +5,7 @@ interface Conditional {
 
 interface Field {
   conditional?: Conditional;
-  description?: string;
+  hint?: string;
   disabled?: boolean;
   display?: string;
   editorStyle?: string;

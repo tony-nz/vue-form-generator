@@ -16,6 +16,7 @@ export const form: Array<FormTypes> = [
           {
             type: "text",
             label: "Given Name",
+            hint: "Please enter the given name...",
             placeholder: "John",
             id: "givenName",
             required: true,
@@ -78,7 +79,7 @@ export const form: Array<FormTypes> = [
             type: "select",
             label: "Organization",
             id: "orgUnitPath",
-            description: "Please select a organization...",
+            hint: "Please select a organization...",
             required: true,
             optionsUrl: "/api/sms/google/organization",
             optionValue: "orgUnitPath",
@@ -115,6 +116,7 @@ export const form: Array<FormTypes> = [
           {
             type: "switch",
             label: "Suspended",
+            placeholder: "Disable the user from accessing their account",
             id: "suspended",
             options: ["true", "false"],
             required: true,

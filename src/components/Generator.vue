@@ -12,6 +12,7 @@
     <template v-if="form && Object.keys(form).length > 0">
       <template v-for="(item, index) in form" :key="index">
         <div
+          v-if="item"
           v-show="state.currentStep === index || item.type === 'group'"
           class="p-2 mb-4 bg-gray-100 grid grid-cols-12 gap-4 text-left"
         >
@@ -61,7 +62,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref } from "vue";
-import type FormTypes from "@/config/FormConfigTypes";
+import type { Form } from "@/config/FormConfigTypes";
 import Field from "./Field.vue";
 
 interface State {
@@ -86,7 +87,7 @@ export default defineComponent({
       default: "off",
     },
     form: {
-      type: Array as PropType<FormTypes>,
+      type: Array as PropType<Form>,
       required: true,
     },
   },
