@@ -1,16 +1,22 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+  <h1>Vue Form Generator Test</h1>
+  <Generator :form="form" />
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import HelloWorld from "./components/HelloWorld.vue";
+import { form } from "./config/FormConfig";
+import Generator from "./components/Generator.vue";
 
 export default defineComponent({
   name: "App",
   components: {
-    HelloWorld,
+    Generator,
+  },
+  setup() {
+    return {
+      form,
+    };
   },
 });
 </script>
@@ -23,5 +29,8 @@ export default defineComponent({
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+h1 {
+  margin-bottom: 30px;
 }
 </style>
