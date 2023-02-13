@@ -63,6 +63,14 @@
           <p class="text-gray-500">
             {{ field.placeholder }}
           </p>
+          <span
+            v-if="
+              Object.keys(state.errors).length > 0 && state.errors[field.id]
+            "
+            class="text-red-700"
+          >
+            {{ state.errors[field.id] }}
+          </span>
         </div>
       </div>
     </div>
