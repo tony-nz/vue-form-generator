@@ -49,7 +49,6 @@
             :required="field.required"
             :class="{
               'input w-full': field.type != 'switch' ? true : false,
-              'p-invalid': state.errors[field.id],
             }"
             :trueValue="1"
             :falseValue="0"
@@ -57,7 +56,7 @@
           />
         </div>
         <div class="ml-3 text-sm">
-          <label for="offers" class="font-medium text-gray-700">{{
+          <label :for="field.id" class="font-medium text-gray-700">{{
             field.label
           }}</label>
           <p class="text-gray-500">

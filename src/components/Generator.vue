@@ -4,10 +4,10 @@
     ref="form"
     novalidate
     @submit.prevent="state.submitting"
-    class="p-4"
   >
     <input name="hidden" type="text" class="hidden" />
     <template v-if="form && Object.keys(form).length > 0">
+      <!-- Step header Component -->
       <div class="lg:border-t lg:border-b lg:border-gray-200 text-left">
         <nav class="" aria-label="Progress">
           <ol
@@ -28,76 +28,12 @@
                   'border border-gray-200 overflow-hidden lg:border-0',
                 ]"
               >
-                <a
-                  v-if="step.status === 'complete'"
-                  :href="step.href"
-                  class="group"
+                <button
+                  @click="
+                    validateStepFields() ? (state.currentStep = stepIdx) : null
+                  "
+                  class="text-left"
                 >
-                  <span
-                    class="absolute top-0 left-0 w-1 h-full bg-transparent group-hover:bg-gray-200 lg:w-full lg:h-1 lg:bottom-0 lg:top-auto"
-                    aria-hidden="true"
-                  />
-                  <span
-                    :class="[
-                      stepIdx !== 0 ? 'lg:pl-9' : '',
-                      'px-6 py-5 flex items-start text-sm font-medium',
-                    ]"
-                  >
-                    <span class="flex-shrink-0">
-                      <span
-                        class="w-10 h-10 flex items-center justify-center bg-indigo-600 rounded-full"
-                      >
-                        <CheckIcon
-                          class="w-6 h-6 text-white"
-                          aria-hidden="true"
-                        />
-                      </span>
-                    </span>
-                    <span class="mt-0.5 ml-4 min-w-0 flex flex-col">
-                      <span
-                        class="text-xs font-semibold tracking-wide uppercase"
-                        >{{ step.name }}</span
-                      >
-                      <span class="text-sm font-medium text-gray-500">{{
-                        step.description
-                      }}</span>
-                    </span>
-                  </span>
-                </a>
-                <a
-                  v-else-if="step.status === 'current'"
-                  :href="step.href"
-                  aria-current="step"
-                >
-                  <span
-                    class="absolute top-0 left-0 w-1 h-full bg-indigo-600 lg:w-full lg:h-1 lg:bottom-0 lg:top-auto"
-                    aria-hidden="true"
-                  />
-                  <span
-                    :class="[
-                      stepIdx !== 0 ? 'lg:pl-9' : '',
-                      'px-6 py-5 flex items-start text-sm font-medium',
-                    ]"
-                  >
-                    <span class="flex-shrink-0">
-                      <span
-                        class="w-10 h-10 flex items-center justify-center border-2 border-indigo-600 rounded-full"
-                      >
-                        <span class="text-indigo-600">{{ step.id }}</span>
-                      </span>
-                    </span>
-                    <span class="mt-0.5 ml-4 min-w-0 flex flex-col">
-                      <span
-                        class="text-xs font-semibold text-indigo-600 tracking-wide uppercase"
-                        >{{ step.name }}</span
-                      >
-                      <span class="text-sm font-medium text-gray-500">{{
-                        step.description
-                      }}</span>
-                    </span>
-                  </span>
-                </a>
-                <a v-else :href="step.href" class="group">
                   <span
                     class="absolute top-0 left-0 w-1 h-full bg-transparent group-hover:bg-gray-200 lg:w-full lg:h-1 lg:bottom-0 lg:top-auto"
                     aria-hidden="true"
@@ -112,7 +48,20 @@
                       <span
                         class="w-10 h-10 flex items-center justify-center border-2 border-gray-300 rounded-full"
                       >
-                        <span class="text-gray-500">{{ step.id }}</span>
+                        <span class="text-gray-500">
+                          <svg
+                            v-if="state.steps[stepIdx].status === 'complete'"
+                            class="checkmark"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 -2 50 50"
+                          >
+                            <path
+                              class="checkmark__check"
+                              fill="none"
+                              d="M14.1 27.2l7.1 7.2 16.7-16.8"
+                            />
+                          </svg>
+                        </span>
                       </span>
                     </span>
                     <span class="mt-0.5 ml-4 min-w-0 flex flex-col">
@@ -125,7 +74,7 @@
                       }}</span>
                     </span>
                   </span>
-                </a>
+                </button>
                 <template v-if="stepIdx !== 0">
                   <!-- Separator -->
                   <div
@@ -152,12 +101,53 @@
         </nav>
       </div>
       <!-- Tab header Component -->
-      <!-- Step header Component -->
+
+      <div>
+        <div class="sm:hidden">
+          <label for="tabs" class="sr-only">Select a tab</label>
+          <!-- Use an "onChange" listener to redirect the user to the selected tab URL. -->
+          <select
+            id="tabs"
+            name="tabs"
+            class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+          >
+            <option
+              v-for="(tab, tabIdx) in form"
+              :key="tabIdx"
+              :selected="state.currentStep === tabIdx"
+            >
+              {{ tab.name }}
+            </option>
+          </select>
+        </div>
+        <div class="hidden sm:block">
+          <div class="border-b border-gray-200 mb-4">
+            <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+              <button
+                v-for="(tab, tabIdx) in form"
+                :key="tabIdx"
+                @click="state.currentStep = tabIdx"
+                :class="[
+                  state.currentStep === tabIdx
+                    ? 'border-indigo-500 text-indigo-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+                  'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm',
+                ]"
+                :aria-current="
+                  state.currentStep === tabIdx ? 'page' : undefined
+                "
+              >
+                {{ tab.name }}
+              </button>
+            </nav>
+          </div>
+        </div>
+      </div>
       <template v-for="(item, index) in form" :key="index">
         <div
           v-if="item"
           v-show="state.currentStep === index || item.type === 'group'"
-          class="p-2 mb-4 bg-gray-100 grid grid-cols-12 gap-4 text-left"
+          class="p-4 mb-4 bg-gray-100 grid grid-cols-12 gap-4 text-left"
         >
           <div
             v-for="(child, index) in item.children"
@@ -201,7 +191,7 @@
       </template>
 
       <div
-        v-if="form[0].type === 'tab'"
+        v-if="form.length > 0 && form[0].type === 'step'"
         class="mt-10 flex justify-end pt-6 border-t border-gray-200"
       >
         <button
@@ -305,12 +295,37 @@ export default defineComponent({
       state.value.steps.push(...steps);
     };
 
+    /**
+     * Validate step fields
+     * @description Validate required fields for current step
+     */
     const validateStepFields = () => {
       const currentStep = state.value.steps[state.value.currentStep];
       const requiredFields = currentStep.requiredFields;
       const values = state.value.values;
+      state.value.errors = [];
+      currentStep.status = "";
       const errors = requiredFields.filter((field) => !values[field]);
-      console.log("validateStepFields", errors);
+      if (errors.length) {
+        // loop through errors and set error message
+        errors.forEach((error) => {
+          state.value.errors[error] = "This field is required";
+        });
+        // state.value.errors = errors;
+        return false;
+      }
+      currentStep.status = "complete";
+      return true;
+    };
+
+    const validateAllSteps = () => {
+      const steps = state.value.steps;
+      const values = state.value.values;
+      const errors = steps
+        .map((step) => {
+          return step.requiredFields.filter((field) => !values[field]);
+        })
+        .flat();
       if (errors.length) {
         // loop through errors and set error message
         errors.forEach((error) => {
@@ -321,7 +336,6 @@ export default defineComponent({
       }
       return true;
     };
-
     onMounted(() => {
       loadSteps();
       isMounted.value = true;
@@ -337,3 +351,17 @@ export default defineComponent({
   },
 });
 </script>
+
+<style>
+.checkmark {
+  width: 40px;
+  height: 40px;
+  stroke-width: 4;
+  stroke: green;
+  top: 10px;
+}
+.p-invalid {
+  color: #000000;
+  background: rgb(255, 0, 0, 0.2);
+}
+</style>

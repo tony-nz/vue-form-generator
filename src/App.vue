@@ -1,6 +1,8 @@
 <template>
   <h1>Vue Form Generator Test</h1>
-  <Generator :form="form" />
+  <div class="mx-auto max-w-7xl">
+    <Generator :form="form" />
+  </div>
 </template>
 
 <script lang="ts">
