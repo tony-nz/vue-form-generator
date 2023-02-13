@@ -1,12 +1,9 @@
 <template>
-  <div
-    v-if="isMounted && isFieldVisible(field)"
-    :class="field.class ? field.class : 'col-span-12'"
-  >
+  <div v-if="isMounted && isFieldVisible(field) && field.id">
     <component :is="getLabelType(field)" class="label" />
-    <label :for="field.id" class="block text-sm font-medium text-gray-700">{{
-      field.label
-    }}</label>
+    <label :for="field.id" class="block text-sm font-medium text-gray-700">
+      {{ field.label }}
+    </label>
     <p class="text-gray-500">
       {{ field.description }}
     </p>
@@ -56,7 +53,12 @@
         />
         <label :for="option" class="ml-2">{{ formatOption(option) }}</label>
       </div>
-      <span class="text-red-700">{{ state.errors[0] }}</span>
+      <span
+        v-if="Object.keys(state.errors).length > 0 && state.errors[field.id]"
+        class="text-red-700"
+      >
+        {{ state.errors[field.id] }}
+      </span>
     </div>
     <div v-else>
       <component
@@ -68,7 +70,7 @@
         :required="field.required"
         :class="{
           'input w-full': field.type != 'switch' ? true : false,
-          'p-invalid': errors[field.id],
+          'p-invalid': state.errors[field.id],
         }"
         :placeholder="field.placeholder || 'Please select...'"
         :readonly="field.readonly"
@@ -88,7 +90,12 @@
         date-format="dd-mm-yy"
         class="dark:bg-slate-900 dark:border-none"
       />
-      <span class="text-red-700">errors</span>
+      <span
+        v-if="Object.keys(state.errors).length > 0 && state.errors[field.id]"
+        class="text-red-700"
+      >
+        {{ state.errors[field.id] }}
+      </span>
     </div>
   </div>
 </template>
@@ -129,7 +136,7 @@ export default defineComponent({
      * @returns a clean option, removing underscores
      * and capitalizing first letter
      */
-    const formatOption = (option) => {
+    const formatOption = (option: string) => {
       return (
         option.charAt(0).toUpperCase() +
         option.slice(1).toLowerCase().replaceAll("_", " ")
@@ -140,7 +147,7 @@ export default defineComponent({
      * @param value
      * @returns converted value
      */
-    const formatValue = (value) => {
+    const formatValue = (value: string) => {
       switch (value.toLowerCase()) {
         case "true":
         case "yes":
@@ -281,7 +288,7 @@ export default defineComponent({
         return true;
       }
       const conditionalValue = field.conditional.value;
-      const conditionalField = props.values[field.conditional.field];
+      const conditionalField = props.state.values[field.conditional.field];
 
       if (Array.isArray(conditionalValue)) {
         if (Array.isArray(conditionalField)) {
@@ -316,7 +323,7 @@ export default defineComponent({
      *
      * Add files to state object fileFieldsFiles
      */
-    const setFileFieldValue = (field, $event) => {
+    const setFileFieldValue = (field: Field, $event: any) => {
       emit("setFileFieldValue", field, $event);
     };
 

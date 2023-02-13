@@ -3,9 +3,10 @@ import type FormTypes from "./FormConfigTypes";
 const newLocal = "Advanced settings for the user";
 export const form: Array<FormTypes> = [
   {
-    type: "tab",
     name: "Tab 1",
+    type: "group",
     // type: "step",
+    // type: "tab",
     children: [
       {
         label: "General",
@@ -128,6 +129,49 @@ export const form: Array<FormTypes> = [
               field: "suspended",
               value: 1, // true
             },
+          },
+          {
+            type: "text",
+            label: "Suspended Reason More",
+            placeholder: "E.g. user no longer at organization",
+            id: "suspendedReason2",
+            required: false,
+            conditional: {
+              field: "suspendedReason",
+              value: "Yes", // true
+            },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    name: "Tab 2",
+    type: "group",
+    // type: "step",
+    // type: "tab",
+    children: [
+      {
+        label: "General",
+        class: "col-span-12",
+        description: newLocal,
+        fields: [
+          {
+            type: "text",
+            label: "Given Name",
+            placeholder: "John",
+            id: "givenName",
+            required: true,
+            class: "col-span-6",
+          },
+          {
+            type: "editor",
+            label: "Critical Information",
+            id: "criticalInformation",
+            required: false,
+            editorStyle: "height: 150px;",
+            display: "accordion",
+            class: "col-span-6",
           },
         ],
       },

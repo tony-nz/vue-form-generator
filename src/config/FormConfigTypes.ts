@@ -1,32 +1,32 @@
 interface Conditional {
-  field: string;
-  value: string | number | boolean;
+  field?: string;
+  value?: string | number | boolean;
 }
 
 interface Field {
-  type?: string;
-  label?: string;
-  placeholder?: string;
-  id?: string;
-  disabled?: boolean;
+  conditional?: Conditional;
   description?: string;
+  disabled?: boolean;
+  display?: string;
+  editorStyle?: string;
+  fileType?: string;
+  formats?: Array<string>;
+  id?: string;
+  label?: string;
+  type?: string;
+  placeholder?: string;
   required?: boolean;
   multiple?: boolean;
   maxFiles?: number;
   maxFileSize?: number;
-  fileType?: string;
   class?: string;
   options?: Array<any>;
-  formats?: Array<string>;
   localData?: Array<any>;
-  display?: string;
   optionsUrl?: string;
   optionValue?: string;
   optionsLabel?: string;
   resourceName?: string;
-  editorStyle?: string;
   readonly?: boolean;
-  conditional?: Conditional;
 }
 
 interface ChildField {
@@ -37,7 +37,7 @@ interface ChildField {
 }
 
 interface Form {
-  type?: "tab" | "step" | "group";
+  type?: "group" | "step" | "tab";
   name?: string;
   children?: Array<ChildField>;
 }
