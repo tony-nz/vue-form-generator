@@ -4,9 +4,10 @@ const newLocal = "Advanced settings for the user";
 export const form: Array<FormTypes> = [
   {
     name: "Tab 1",
-    type: "group",
+    description: "This is a description for the form",
+    // type: "group",
     // type: "step",
-    // type: "tab",
+    type: "tab",
     children: [
       {
         label: "General",
@@ -149,9 +150,9 @@ export const form: Array<FormTypes> = [
   },
   {
     name: "Tab 2",
-    type: "group",
+    // type: "group",
     // type: "step",
-    // type: "tab",
+    type: "tab",
     children: [
       {
         label: "General",

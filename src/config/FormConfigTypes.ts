@@ -39,6 +39,7 @@ interface ChildField {
 interface Form {
   type?: "group" | "step" | "tab";
   name?: string;
+  description?: string;
   children?: Array<ChildField>;
 }
 
