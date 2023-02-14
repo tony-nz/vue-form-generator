@@ -199,7 +199,6 @@
         <button
           v-if="state.currentStep > 0"
           @click="state.currentStep--"
-          type="submit"
           class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 mr-2"
         >
           Previous
@@ -207,10 +206,17 @@
         <button
           v-if="state.currentStep < form.length - 1"
           @click="validateStepFields() ? state.currentStep++ : null"
-          type="submit"
           class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
         >
           Next
+        </button>
+        <button
+          v-if="state.currentStep === form.length - 1"
+          @click="validateStepFields() ? state.currentStep++ : null"
+          type="submit"
+          class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+        >
+          Finish
         </button>
       </div>
     </template>
