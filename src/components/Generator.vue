@@ -256,7 +256,7 @@ export default defineComponent({
       default: () => ({}),
     },
     form: {
-      type: Array as PropType<Form>,
+      type: Array,
       required: true,
     },
     type: {
@@ -288,28 +288,28 @@ export default defineComponent({
      * @description Load props
      */
     const loadProps = () => {
-      const steps = props.form.map((item, index) => {
+      const steps = props.form.map((item: any, index) => {
         return {
           id: index,
           name: item.name,
           description: item.description,
           status: "",
           requiredFields: item.children
-            .map((child) => {
+            .map((child: any) => {
               return child.fields
-                .filter((field) => field.required)
-                .map((field) => field.id);
+                .filter((field: any) => field.required)
+                .map((field: any) => field.id);
             })
             .flat(),
         };
       });
       state.value.steps.push(...steps);
       // loop through form
-      props.form.forEach((item) => {
+      props.form.forEach((item: any) => {
         // loop through children
-        item.children.forEach((child) => {
+        item.children.forEach((child: any) => {
           // loop through fields
-          child.fields.forEach((field) => {
+          child.fields.forEach((field: any) => {
             const value = child.type === "checkbox" ? [] : "";
 
             // set value
