@@ -3,8 +3,11 @@
     <input name="hidden" type="text" class="hidden" />
     <template v-if="form && Object.keys(form).length > 0">
       <!-- Step header Component -->
-      <div class="lg:border-t lg:border-b lg:border-gray-200 text-left">
-        <nav class="" aria-label="Progress">
+      <div
+        v-if="type === 'steps'"
+        class="lg:border-t lg:border-b lg:border-gray-200 text-left"
+      >
+        <nav aria-label="Progress">
           <ol
             role="list"
             class="rounded-md overflow-hidden lg:flex lg:border-l lg:border-r lg:border-gray-200 lg:rounded-none"
@@ -96,8 +99,7 @@
         </nav>
       </div>
       <!-- Tab header Component -->
-
-      <div>
+      <div v-if="type === 'tabs'">
         <div class="sm:hidden">
           <label for="tabs" class="sr-only">Select a tab</label>
           <!-- Use an "onChange" listener to redirect the user to the selected tab URL. -->
@@ -147,7 +149,7 @@
       <template v-for="(item, index) in form" :key="index">
         <div
           v-if="item"
-          v-show="state.currentStep === index || item.type === 'group'"
+          v-show="state.currentStep === index || type === 'form'"
           class="p-4 mb-4 bg-gray-100 grid grid-cols-12 gap-4 text-left"
         >
           <div
@@ -190,9 +192,8 @@
           </div>
         </div>
       </template>
-
       <div
-        v-if="form.length > 0 && form[0].type === 'step'"
+        v-if="form.length > 0 && type === 'steps'"
         class="mt-10 flex justify-end pt-6 border-t border-gray-200"
       >
         <button
@@ -257,6 +258,10 @@ export default defineComponent({
     form: {
       type: Array as PropType<Form>,
       required: true,
+    },
+    type: {
+      type: String,
+      default: "form",
     },
   },
   setup(props, { emit }) {

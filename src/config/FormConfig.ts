@@ -5,9 +5,6 @@ export const form: Array<FormTypes> = [
   {
     name: "Tab 1",
     description: "This is a description for the form",
-    // type: "group",
-    // type: "step",
-    type: "tab",
     children: [
       {
         label: "General",
@@ -150,9 +147,6 @@ export const form: Array<FormTypes> = [
   },
   {
     name: "Tab 2",
-    // type: "group",
-    // type: "step",
-    type: "tab",
     children: [
       {
         label: "General",

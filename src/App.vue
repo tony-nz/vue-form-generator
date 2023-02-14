@@ -1,7 +1,7 @@
 <template>
   <h1>Vue Form Generator Test</h1>
   <div class="mx-auto max-w-7xl">
-    <Generator @updateData="updateData" :form="form" />
+    <Generator @updateData="updateData" :form="form" :type="'steps'" />
   </div>
   <div v-if="showSuccess" class="mt-8 mx-auto max-w-7xl p-8 bg-green-300">
     <h2>Success!</h2>
