@@ -1,12 +1,16 @@
 <template>
   <h1>Vue Form Generator Test</h1>
   <div class="mx-auto max-w-7xl">
-    <Generator :form="form" />
+    <Generator @updateData="updateData" :form="form" />
+  </div>
+  <div v-if="showSuccess" class="mt-8 mx-auto max-w-7xl p-8 bg-green-300">
+    <h2>Success!</h2>
+    <div class="mt-4">{{ data }}</div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import { form } from "./config/FormConfig";
 import Generator from "./components/Generator.vue";
 
@@ -16,8 +20,20 @@ export default defineComponent({
     Generator,
   },
   setup() {
+    const showSuccess = ref(false);
+    const data = ref();
+
+    const updateData = (values: any) => {
+      console.log("updateData", values);
+      data.value = values;
+      showSuccess.value = true;
+    };
+
     return {
+      data,
       form,
+      showSuccess,
+      updateData,
     };
   },
 });

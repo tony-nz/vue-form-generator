@@ -1,10 +1,5 @@
 <template>
-  <form
-    v-if="isMounted"
-    ref="form"
-    novalidate
-    @submit.prevent="state.submitting"
-  >
+  <form v-if="isMounted" ref="form" novalidate @submit.prevent="submitForm">
     <input name="hidden" type="text" class="hidden" />
     <template v-if="form && Object.keys(form).length > 0">
       <!-- Step header Component -->
@@ -122,7 +117,7 @@
         </div>
         <div class="hidden sm:block">
           <div class="border-b border-gray-200 mb-4">
-            <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+            <nav class="-mb-px flex gap-8" aria-label="Tabs">
               <button
                 v-for="(tab, tabIdx) in form"
                 :key="tabIdx"
@@ -138,6 +133,12 @@
                 "
               >
                 {{ tab.name }}
+              </button>
+              <button
+                type="submit"
+                class="ml-auto my-2 bg-green-500 p-2 px-4 rounded-md text-white font-bold"
+              >
+                Save
               </button>
             </nav>
           </div>
@@ -249,6 +250,10 @@ export default defineComponent({
       type: String,
       default: "off",
     },
+    data: {
+      type: Object,
+      default: () => ({}),
+    },
     form: {
       type: Array as PropType<Form>,
       required: true,
@@ -268,15 +273,16 @@ export default defineComponent({
     const updateValue = (fieldId: string, value: any) => {
       state.value.values[fieldId] = value;
     };
-    const onChange = (data: any) => {
+    const saveData = (data: any) => {
+      console.log("saveData", data);
       emit("updateData", data);
     };
 
     /**
-     * Load steps
-     * @description Load steps from form config
+     * Load props
+     * @description Load props
      */
-    const loadSteps = () => {
+    const loadProps = () => {
       const steps = props.form.map((item, index) => {
         return {
           id: index,
@@ -293,6 +299,25 @@ export default defineComponent({
         };
       });
       state.value.steps.push(...steps);
+      // loop through form
+      props.form.forEach((item) => {
+        // loop through children
+        item.children.forEach((child) => {
+          // loop through fields
+          child.fields.forEach((field) => {
+            const value = child.type === "checkbox" ? [] : "";
+
+            // set value
+            state.value.values[field.id] = props.data[field.id]
+              ? props.data[field.id]
+              : value;
+            // set options
+            if (field.options) {
+              state.value.options[field.id] = field.options;
+            }
+          });
+        });
+      });
     };
 
     /**
@@ -319,6 +344,7 @@ export default defineComponent({
     };
 
     const validateAllSteps = () => {
+      state.value.errors = [];
       const steps = state.value.steps;
       const values = state.value.values;
       const errors = steps
@@ -336,16 +362,28 @@ export default defineComponent({
       }
       return true;
     };
+
+    /**
+     * Submit form
+     * @description Submit form
+     */
+    const submitForm = () => {
+      if (validateAllSteps()) {
+        console.log(state.value.values);
+        saveData(state.value.values);
+      }
+    };
+
     onMounted(() => {
-      loadSteps();
+      loadProps();
       isMounted.value = true;
     });
 
     return {
-      onChange,
       updateValue,
       isMounted,
       state,
+      submitForm,
       validateStepFields,
     };
   },
