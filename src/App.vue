@@ -1,5 +1,13 @@
 <template>
-  <h1 class="text-xl">Vue Form Generator Test</h1>
+  <h1 class="text-xl mb-2">Vue Form Generator</h1>
+  <span class="font-medium text-sm"
+    >A Vue 3 component for generating forms by tony-nz
+    <span class="text-xs text-gray-400"
+      ><a href="https://github.com/tony-nz/vue-form-generator" target="_blank"
+        >Github</a
+      ></span
+    ></span
+  >
   <div class="p-4 mx-auto max-w-7xl">
     <Generator
       @updateData="updateData"
