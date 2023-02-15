@@ -2,7 +2,7 @@ import type FormTypes from "./FormConfigTypes";
 
 export const form: Array<FormTypes> = [
   {
-    name: "Tab 1",
+    name: "Basic details",
     description: "This is a description for the form",
     children: [
       {
@@ -94,7 +94,8 @@ export const form: Array<FormTypes> = [
     ],
   },
   {
-    name: "Tab 2",
+    name: "Extra details",
+    description: "This is a description for the form",
     children: [
       {
         label: "Recovery",

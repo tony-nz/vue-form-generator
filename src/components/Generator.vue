@@ -15,7 +15,7 @@
             <li
               v-for="(step, stepIdx) in form"
               :key="step.id"
-              class="relative overflow-hidden lg:flex-1"
+              class="relative overflow-hidden flex-1"
             >
               <div
                 :class="[
