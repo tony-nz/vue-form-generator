@@ -9,11 +9,21 @@
     ></span
   >
   <div class="p-4 mx-auto max-w-7xl">
+    <div class="my-4">
+      <select
+        v-model="type"
+        class="w-full p-2 border border-gray-300 rounded-md"
+      >
+        <option value="form">Form</option>
+        <option value="steps">Steps</option>
+        <option value="tabs">Tabs</option>
+      </select>
+    </div>
     <Generator
       @updateData="updateData"
       :data="savedData"
       :form="form"
-      :type="'steps'"
+      :type="type"
     />
   </div>
   <footer
@@ -70,7 +80,7 @@ export default defineComponent({
       changePasswordAtNextLogin: 1,
     });
     const showSuccess = ref(false);
-
+    const type = ref("tabs");
     const updateData = (values: any) => {
       data.value = values;
       showSuccess.value = true;
@@ -81,6 +91,7 @@ export default defineComponent({
       form,
       savedData,
       showSuccess,
+      type,
       updateData,
     };
   },
