@@ -5,7 +5,7 @@
       <!-- Step header Component -->
       <div
         v-if="type === 'steps'"
-        class="lg:border-t lg:border-b lg:border-gray-200 text-left"
+        class="mb-4 lg:border-t lg:border-b lg:border-gray-200 text-left"
       >
         <nav aria-label="Progress">
           <ol
@@ -34,6 +34,11 @@
                   class="text-left"
                 >
                   <span
+                    :class="
+                      state.steps[stepIdx].status === 'complete'
+                        ? 'bg-green-400'
+                        : 'bg-gray-200'
+                    "
                     class="absolute top-0 left-0 w-1 h-full bg-transparent group-hover:bg-gray-200 lg:w-full lg:h-1 lg:bottom-0 lg:top-auto"
                     aria-hidden="true"
                   />
@@ -45,14 +50,19 @@
                   >
                     <span class="flex-shrink-0">
                       <span
-                        class="w-10 h-10 flex items-center justify-center border-2 border-gray-300 rounded-full"
+                        :class="
+                          state.steps[stepIdx].status === 'complete'
+                            ? 'bg-green-500 border-green-400'
+                            : 'bg-gray-200'
+                        "
+                        class="w-10 h-10 flex items-center justify-center border-2 border-gray-200 rounded-full"
                       >
                         <span class="text-gray-500">
                           <svg
                             v-if="state.steps[stepIdx].status === 'complete'"
                             class="checkmark"
                             xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 -2 50 50"
+                            viewBox="0 0 50 50"
                           >
                             <path
                               class="checkmark__check"
@@ -159,12 +169,16 @@
             :key="index"
             :class="child.class ? child.class : 'col-span-12'"
           >
-            <!-- {{ child.description }} -->
-            <label
-              :for="child.id"
-              class="block text-sm font-medium text-gray-700"
-              >{{ child.label }}</label
-            >
+            <div class="mb-4 pb-2 border-b">
+              <label
+                :for="child.id"
+                class="block text-lg font-medium text-gray-700"
+                >{{ child.label }}</label
+              >
+              <span class="block text-sm font-medium text-gray-400">
+                {{ child.description }}
+              </span>
+            </div>
             <div class="grid grid-cols-12 gap-4">
               <template v-for="(field, index) in child.fields" :key="index">
                 <div
@@ -211,7 +225,7 @@
             <li v-for="step in state.steps" :key="step.id">
               <a
                 v-if="step.status === 'complete'"
-                class="block w-2.5 h-2.5 bg-indigo-600 rounded-full hover:bg-indigo-900"
+                class="block w-2.5 h-2.5 bg-green-600 rounded-full hover:bg-green-900"
               >
                 <span class="sr-only">{{ step.name }}</span>
               </a>
@@ -224,7 +238,7 @@
                   <span class="w-full h-full rounded-full bg-indigo-200" />
                 </span>
                 <span
-                  class="relative block w-2.5 h-2.5 bg-indigo-600 rounded-full"
+                  class="relative block w-2.5 h-2.5 bg-green-600 rounded-full"
                   aria-hidden="true"
                 />
                 <span class="sr-only">{{ step.name }}</span>
@@ -242,21 +256,21 @@
           <button
             v-if="state.currentStep > 0"
             @click="state.currentStep--"
-            class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 mr-2"
+            class="bg-gray-500 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-gray-500 mr-2"
           >
             Previous
           </button>
           <button
             v-if="state.currentStep < form.length - 1"
             @click="validateStepFields() ? state.currentStep++ : null"
-            class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+            class="bg-gray-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-gray-500"
           >
             Next
           </button>
           <button
             v-if="state.currentStep === form.length - 1"
             type="submit"
-            class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+            class="bg-green-500 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-green-500"
           >
             Finish
           </button>
@@ -457,8 +471,7 @@ export default defineComponent({
   width: 40px;
   height: 40px;
   stroke-width: 4;
-  stroke: green;
-  top: 10px;
+  stroke: white;
 }
 .p-invalid {
   color: #000000;
