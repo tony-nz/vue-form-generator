@@ -27,6 +27,7 @@
                 ]"
               >
                 <button
+                  type="button"
                   @click="
                     validateStepFields() ? (state.currentStep = stepIdx) : null
                   "
@@ -133,6 +134,7 @@
                 :aria-current="
                   state.currentStep === tabIdx ? 'page' : undefined
                 "
+                type="button"
               >
                 {{ tab.name }}
               </button>
@@ -169,7 +171,7 @@
                   v-if="!allowedFields || allowedFields?.includes(field?.id)"
                   :class="field.class ? field.class : 'col-span-12'"
                 >
-                  <Accordion v-if="field.display == 'accordion'">
+                  <Accordion v-if="field.display == 'accordion'" class="mt-4">
                     <AccordionTab :header="field.label">
                       <Field
                         @update="updateValue"
@@ -194,30 +196,71 @@
       </template>
       <div
         v-if="form.length > 0 && type === 'steps'"
-        class="mt-10 flex justify-end pt-6 border-t border-gray-200"
+        class="mt-10 flex justify-between pt-6 border-t border-gray-200"
       >
-        <button
-          v-if="state.currentStep > 0"
-          @click="state.currentStep--"
-          class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 mr-2"
+        <nav
+          class="flex items-center justify-center ml-2"
+          aria-label="Progress"
         >
-          Previous
-        </button>
-        <button
-          v-if="state.currentStep < form.length - 1"
-          @click="validateStepFields() ? state.currentStep++ : null"
-          class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
-        >
-          Next
-        </button>
-        <button
-          v-if="state.currentStep === form.length - 1"
-          @click="validateStepFields() ? state.currentStep++ : null"
-          type="submit"
-          class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
-        >
-          Finish
-        </button>
+          <p class="text-sm font-medium">
+            Step
+            {{ state.currentStep + 1 }} of
+            {{ form.length }}
+          </p>
+          <ol role="list" class="ml-8 flex items-center space-x-5">
+            <li v-for="step in state.steps" :key="step.id">
+              <a
+                v-if="step.status === 'complete'"
+                class="block w-2.5 h-2.5 bg-indigo-600 rounded-full hover:bg-indigo-900"
+              >
+                <span class="sr-only">{{ step.name }}</span>
+              </a>
+              <a
+                v-else-if="step.status === 'current'"
+                class="relative flex items-center justify-center"
+                aria-current="step"
+              >
+                <span class="absolute w-5 h-5 p-px flex" aria-hidden="true">
+                  <span class="w-full h-full rounded-full bg-indigo-200" />
+                </span>
+                <span
+                  class="relative block w-2.5 h-2.5 bg-indigo-600 rounded-full"
+                  aria-hidden="true"
+                />
+                <span class="sr-only">{{ step.name }}</span>
+              </a>
+              <a
+                v-else
+                class="block w-2.5 h-2.5 bg-gray-200 rounded-full hover:bg-gray-400"
+              >
+                <span class="sr-only">{{ step.name }}</span>
+              </a>
+            </li>
+          </ol>
+        </nav>
+        <div>
+          <button
+            v-if="state.currentStep > 0"
+            @click="state.currentStep--"
+            class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500 mr-2"
+          >
+            Previous
+          </button>
+          <button
+            v-if="state.currentStep < form.length - 1"
+            @click="validateStepFields() ? state.currentStep++ : null"
+            class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+          >
+            Next
+          </button>
+          <button
+            v-if="state.currentStep === form.length - 1"
+            type="submit"
+            class="bg-indigo-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-indigo-500"
+          >
+            Finish
+          </button>
+        </div>
       </div>
     </template>
   </form>
@@ -285,7 +328,6 @@ export default defineComponent({
       state.value.values[fieldId] = value;
     };
     const saveData = (data: any) => {
-      console.log("saveData", data);
       emit("updateData", data);
     };
 
@@ -360,7 +402,17 @@ export default defineComponent({
       const values = state.value.values;
       const errors = steps
         .map((step) => {
-          return step.requiredFields.filter((field) => !values[field]);
+          const unfilledFields = step.requiredFields.filter(
+            (field) => !values[field]
+          );
+
+          if (unfilledFields.length === 0) {
+            // All required fields have been filled out
+            step.status = "complete";
+          }
+
+          return unfilledFields;
+          // return step.requiredFields.filter((field) => !values[field]);
         })
         .flat();
       if (errors.length) {
@@ -380,7 +432,6 @@ export default defineComponent({
      */
     const submitForm = () => {
       if (validateAllSteps()) {
-        console.log(state.value.values);
         saveData(state.value.values);
       }
     };

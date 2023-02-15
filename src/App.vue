@@ -24,7 +24,6 @@ export default defineComponent({
     const data = ref();
 
     const updateData = (values: any) => {
-      console.log("updateData", values);
       data.value = values;
       showSuccess.value = true;
     };
