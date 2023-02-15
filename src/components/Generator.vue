@@ -141,6 +141,13 @@
                 type="button"
               >
                 {{ tab.name }}
+                <span
+                  v-if="state.steps[tabIdx].errors.length > 0"
+                  class="text-red-500 text-xs italic"
+                  >({{ state.steps[tabIdx].errors.length }} error{{
+                    state.steps[tabIdx].errors.length > 1 ? "s" : null
+                  }})</span
+                >
               </button>
               <button
                 type="submit"
@@ -282,6 +289,7 @@ import type { Form } from "@/config/FormConfigTypes";
 import Field from "./Field.vue";
 
 interface Steps {
+  errors: Record<string, any>;
   id: number;
   name: string;
   description: string;
@@ -348,6 +356,7 @@ export default defineComponent({
     const loadProps = () => {
       const steps = props.form.map((item: any, index) => {
         return {
+          errors: {},
           id: index,
           name: item.name,
           description: item.description,
@@ -395,6 +404,10 @@ export default defineComponent({
       const currentStep = state.value.steps[state.value.currentStep];
       const requiredFields = currentStep.requiredFields;
       const values = state.value.values;
+      // clear all step status
+      state.value.steps.forEach((step) => {
+        step.status = "";
+      });
       state.value.errors = [];
       currentStep.status = "";
       const errors = requiredFields.filter((field) => !values[field]);
@@ -425,6 +438,7 @@ export default defineComponent({
             step.status = "complete";
           }
 
+          step.errors = unfilledFields;
           return unfilledFields;
           // return step.requiredFields.filter((field) => !values[field]);
         })
