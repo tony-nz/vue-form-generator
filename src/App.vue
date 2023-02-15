@@ -3,10 +3,15 @@
   <div class="p-4 mx-auto max-w-7xl">
     <Generator @updateData="updateData" :form="form" :type="'steps'" />
   </div>
-  <div v-if="showSuccess" class="mt-8 mx-auto max-w-7xl p-8 bg-green-300">
-    <h2>Success!</h2>
-    <div class="mt-4">{{ data }}</div>
-  </div>
+  <footer
+    v-if="showSuccess"
+    class="w-full h-64 bg-green-300 fixed bottom-0 pt-10"
+  >
+    <div class="mx-auto max-w-7xl bg-green-300">
+      <h2 class="font-medium text-xl">Success!</h2>
+      <div class="mt-4">{{ data }}</div>
+    </div>
+  </footer>
 </template>
 
 <script lang="ts">
