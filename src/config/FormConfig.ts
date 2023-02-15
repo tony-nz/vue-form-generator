@@ -1,6 +1,5 @@
 import type FormTypes from "./FormConfigTypes";
 
-const newLocal = "Advanced settings for the user";
 export const form: Array<FormTypes> = [
   {
     name: "Tab 1",
@@ -9,7 +8,7 @@ export const form: Array<FormTypes> = [
       {
         label: "General",
         class: "col-span-6",
-        description: newLocal,
+        description: "General settings for the user",
         fields: [
           {
             type: "text",
@@ -45,32 +44,11 @@ export const form: Array<FormTypes> = [
             ],
             required: true,
           },
-          {
-            type: "text",
-            label: "Primary Email",
-            placeholder: "john@gmail.com",
-            id: "primaryEmail",
-            required: false,
-          },
-          {
-            type: "text",
-            label: "Recovery Email",
-            placeholder: "john.smith@gmail.com",
-            id: "recoveryEmail",
-            required: false,
-          },
-          {
-            type: "text",
-            label: "Recovery Phone",
-            placeholder: "021 503 088",
-            id: "recoveryPhone",
-            required: false,
-          },
         ],
       },
       {
         label: "Advanced",
-        description: newLocal,
+        description: "Advanced settings for the user",
         class: "col-span-6",
         fields: [
           {
@@ -111,6 +89,54 @@ export const form: Array<FormTypes> = [
             options: ["true", "false"],
             required: true,
           },
+        ],
+      },
+    ],
+  },
+  {
+    name: "Tab 2",
+    children: [
+      {
+        label: "Recovery",
+        class: "col-span-6",
+        description: "Recovery settings for the user",
+        fields: [
+          {
+            type: "text",
+            label: "Primary Email",
+            placeholder: "john@gmail.com",
+            id: "primaryEmail",
+            required: false,
+          },
+          {
+            type: "text",
+            label: "Recovery Email",
+            placeholder: "john.smith@gmail.com",
+            id: "recoveryEmail",
+            required: false,
+          },
+          {
+            type: "text",
+            label: "Recovery Phone",
+            placeholder: "021 503 088",
+            id: "recoveryPhone",
+            required: false,
+          },
+        ],
+      },
+      {
+        label: "Misc",
+        class: "col-span-6",
+        description: "Miscellaneous settings for the user",
+        fields: [
+          {
+            type: "editor",
+            label: "Critical Information",
+            id: "criticalInformation",
+            required: false,
+            editorStyle: "height: 150px;",
+            display: "accordion",
+          },
           {
             type: "switch",
             label: "Suspended",
@@ -122,7 +148,7 @@ export const form: Array<FormTypes> = [
           {
             type: "text",
             label: "Suspended Reason",
-            placeholder: "E.g. user no longer at organization",
+            placeholder: "E.g. user no longer at organization (Type: Yes)",
             id: "suspendedReason",
             required: false,
             conditional: {
@@ -140,35 +166,6 @@ export const form: Array<FormTypes> = [
               field: "suspendedReason",
               value: "Yes", // true
             },
-          },
-        ],
-      },
-    ],
-  },
-  {
-    name: "Tab 2",
-    children: [
-      {
-        label: "General",
-        class: "col-span-12",
-        description: newLocal,
-        fields: [
-          {
-            type: "text",
-            label: "Given Name",
-            placeholder: "John",
-            id: "givenName",
-            required: true,
-            class: "col-span-6",
-          },
-          {
-            type: "editor",
-            label: "Critical Information",
-            id: "criticalInformation",
-            required: false,
-            editorStyle: "height: 150px;",
-            display: "accordion",
-            class: "col-span-6",
           },
         ],
       },

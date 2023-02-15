@@ -5,7 +5,7 @@
       @updateData="updateData"
       :data="savedData"
       :form="form"
-      :type="'steps'"
+      :type="'tabs'"
     />
   </div>
   <footer

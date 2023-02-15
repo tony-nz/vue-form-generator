@@ -26,13 +26,7 @@
                   'border border-gray-200 overflow-hidden lg:border-0',
                 ]"
               >
-                <button
-                  type="button"
-                  @click="
-                    validateStepFields() ? (state.currentStep = stepIdx) : null
-                  "
-                  class="text-left"
-                >
+                <div class="text-left">
                   <span
                     :class="
                       state.steps[stepIdx].status === 'complete'
@@ -83,7 +77,7 @@
                       }}</span>
                     </span>
                   </span>
-                </button>
+                </div>
                 <template v-if="stepIdx !== 0">
                   <!-- Separator -->
                   <div
