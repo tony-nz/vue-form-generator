@@ -251,6 +251,7 @@
             v-if="state.currentStep > 0"
             @click="state.currentStep--"
             class="bg-gray-500 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-gray-500 mr-2"
+            type="button"
           >
             Previous
           </button>
@@ -258,6 +259,7 @@
             v-if="state.currentStep < form.length - 1"
             @click="validateStepFields() ? state.currentStep++ : null"
             class="bg-gray-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-gray-500"
+            type="button"
           >
             Next
           </button>
