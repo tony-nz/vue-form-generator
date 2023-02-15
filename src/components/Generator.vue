@@ -385,6 +385,10 @@ export default defineComponent({
           });
         });
       });
+      // loop through props.data and set values
+      Object.keys(props.data).forEach((key) => {
+        state.value.values[key] = props.data[key];
+      });
     };
 
     /**
