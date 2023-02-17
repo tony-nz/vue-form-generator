@@ -285,7 +285,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref } from "vue";
-import type { Form } from "@/config/FormConfigTypes";
+import type { Form } from "../types/VueFormGenerator";
 import Field from "./Field.vue";
 
 interface Steps {
@@ -306,7 +306,7 @@ interface State {
   values: Record<string, any>;
 }
 export default defineComponent({
-  name: "Generator",
+  name: "VueFormGenerator",
   components: {
     Field,
   },
