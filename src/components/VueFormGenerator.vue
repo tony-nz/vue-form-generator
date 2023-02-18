@@ -479,16 +479,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style>
-.checkmark {
-  width: 40px;
-  height: 40px;
-  stroke-width: 4;
-  stroke: white;
-}
-.p-invalid {
-  color: #000000;
-  background: rgb(255, 0, 0, 0.2);
-}
-</style>

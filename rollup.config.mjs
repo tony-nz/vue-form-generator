@@ -5,6 +5,7 @@ import clear from "rollup-plugin-clear";
 export default async function config(args) {
   return {
     input: "src/index.ts",
+    external: "src/main.css",
     output: {
       dir: "dist",
       format: "cjs",

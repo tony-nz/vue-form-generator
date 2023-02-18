@@ -44,4 +44,4 @@ interface Form {
 
 export default Form;
 
-export type { Field, ChildField, Form };
+export type { ChildField, Field, Form };
