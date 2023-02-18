@@ -1,0 +1,6 @@
+/*
+ * Tailwind - The Utility-First CSS Framework
+ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
