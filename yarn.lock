@@ -36,6 +36,20 @@
     "estree-walker" "^2.0.1"
     "picomatch" "^2.2.2"
 
+"@rollup/pluginutils@^5.0.2":
+  "integrity" "sha512-pTd9rIsP92h+B6wWwFbW8RkZv4hiR/xKsqre4SIuAOaOEQRxi0lqLke9k2/7WegC85GgUs9pjmOjCUi3In4vwA=="
+  "resolved" "https://registry.npmjs.org/@rollup/pluginutils/-/pluginutils-5.0.2.tgz"
+  "version" "5.0.2"
+  dependencies:
+    "@types/estree" "^1.0.0"
+    "estree-walker" "^2.0.2"
+    "picomatch" "^2.3.1"
+
+"@types/estree@^1.0.0":
+  "integrity" "sha512-WulqXMDUTYAXCjZnk6JtIHPigp55cVtDgDrO2gHRwhyJto21+1zbVCtOYB2L1F9w4qCQ0rOGWBnBe0FNTiEJIQ=="
+  "resolved" "https://registry.npmjs.org/@types/estree/-/estree-1.0.0.tgz"
+  "version" "1.0.0"
+
 "@vue/compiler-core@3.2.47":
   "integrity" "sha512-p4D7FDnQb7+YJmO2iPEv0SQNeNzcbHdGByJDsT4lynf63AFkOTFN07HsiRSvjGo0QrxR/o3d0hUyNCUnBU2Tig=="
   "resolved" "https://registry.npmjs.org/@vue/compiler-core/-/compiler-core-3.2.47.tgz"
@@ -736,6 +750,13 @@
   dependencies:
     "rimraf" "^2.6.2"
 
+"rollup-plugin-import-css@^3.1.0":
+  "integrity" "sha512-+azurUk2QrUNWs1V5EzpuvV9bRQDEjG+aQDadM6ZEc5LbU6VvFiR3+MPIBnqKrg/miBNag/9H1TWhEUv4TH+jQ=="
+  "resolved" "https://registry.npmjs.org/rollup-plugin-import-css/-/rollup-plugin-import-css-3.1.0.tgz"
+  "version" "3.1.0"
+  dependencies:
+    "@rollup/pluginutils" "^5.0.2"
+
 "rollup-plugin-typescript2@^0.34.1":
   "integrity" "sha512-P4cHLtGikESmqi1CA+tdMDUv8WbQV48mzPYt77TSTOPJpERyZ9TXdDgjSDix8Fkqce6soYz3+fa4lrC93IEkcw=="
   "resolved" "https://registry.npmjs.org/rollup-plugin-typescript2/-/rollup-plugin-typescript2-0.34.1.tgz"
@@ -763,7 +784,7 @@
   dependencies:
     "estree-walker" "^0.6.1"
 
-"rollup@^3.16.0", "rollup@>=1.26.3":
+"rollup@^1.20.0||^2.0.0||^3.0.0", "rollup@^2.x.x || ^3.x.x", "rollup@^3.16.0", "rollup@>=1.26.3":
   "integrity" "sha512-8RnSms6rNqHmZK+wiqgnPCqen+rRnUHXkciGDirh7B00g1rX1vpKbPDhuxCvAG2bburoI+W4Q9/PlUB/zYkiYA=="
   "resolved" "https://registry.npmjs.org/rollup/-/rollup-3.17.1.tgz"
   "version" "3.17.1"

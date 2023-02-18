@@ -1,7 +1,7 @@
+import typescript from "rollup-plugin-typescript2";
+import vue from "rollup-plugin-vue";
 import clear from "rollup-plugin-clear";
 import css from "rollup-plugin-import-css";
-import vue from "rollup-plugin-vue";
-import typescript from "rollup-plugin-typescript2";
 
 export default async function config(args) {
   return {
@@ -13,10 +13,6 @@ export default async function config(args) {
       sourcemap: true,
     },
     plugins: [
-      clear({
-        targets: ["./dist"],
-      }),
-      css(),
       vue(),
       typescript({
         tsconfigOverride: {
@@ -26,6 +22,10 @@ export default async function config(args) {
           include: null,
         },
       }),
+      clear({
+        targets: ["./dist"],
+      }),
+      css(),
     ],
   };
 }
