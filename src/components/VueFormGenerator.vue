@@ -287,6 +287,7 @@
 import { defineComponent, onMounted, PropType, ref } from "vue";
 import type { Form } from "../types/VueFormGenerator";
 import Field from "./Field.vue";
+import "../styles/tailwind.css";
 
 interface Steps {
   errors: Record<string, any>;
@@ -480,9 +481,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="css">
-@import "../styles/tailwind.css";
-
+<style>
 /*
  * Component CSS
  */
