@@ -287,7 +287,6 @@
 import { defineComponent, onMounted, PropType, ref } from "vue";
 import type { Form } from "../types/VueFormGenerator";
 import Field from "./Field.vue";
-import "../styles/tailwind.css";
 
 interface Steps {
   errors: Record<string, any>;
