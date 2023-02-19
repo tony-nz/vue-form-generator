@@ -33,9 +33,11 @@
    ```sh
     npm install @tony-nz/vue-form-generator
    ```
-2. Install TailwindCSS & PrimeVue
-   See https://v2.tailwindcss.com/docs/guides/vue-3-vite & https://primevue.org/setup
-   <br>
+2. Install the following:
+
+- [PrimeVue](https://primevue.org/setup)
+- [TailwindCSS](https://v2.tailwindcss.com/docs/guides/vue-3-vite)
+
 3. Edit `main.js` or `main.ts`
 
    ```ts
