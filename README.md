@@ -18,6 +18,8 @@
     ·
     <a href="https://vue-form-generator.netlify.app/" target="_blank">View Demo</a>
     ·
+    <a href="https://github.com/tony-nz/vue-form-generator-example" target="_blank">View Demo (Github)</a>
+    ·
     <a href="https://github.com/tony-nz/vue-form-generator/issues">Report Bug</a>
     ·
     <a href="https://github.com/tony-nz/vue-form-generator/issues">Request Feature</a>
