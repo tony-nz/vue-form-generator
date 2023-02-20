@@ -1,5 +1,5 @@
 <template>
-  <form v-if="isMounted" ref="form" novalidate @submit.prevent="submitForm">
+  <form v-if="state.isMounted" ref="form" novalidate @submit.prevent="submitForm">
     <input name="hidden" type="text" class="hidden" />
     <template v-if="form && Object.keys(form).length > 0">
       <!-- Step header Component -->
@@ -107,7 +107,6 @@
       <div v-if="type === 'tabs'">
         <div class="sm:hidden">
           <label for="tabs" class="sr-only">Select a tab</label>
-          <!-- Use an "onChange" listener to redirect the user to the selected tab URL. -->
           <select
             id="tabs"
             name="tabs"
@@ -285,7 +284,6 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref } from "vue";
-import type { Form } from "../types/VueFormGenerator";
 import Field from "./Field.vue";
 
 interface Steps {
@@ -332,6 +330,18 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
+    /**
+     * State
+     * @description State
+     * @type {State}
+     * @property {number} currentStep - Current step
+     * @property {Array} errors - Errors
+     * @property {boolean} isMounted - Is mounted
+     * @property {Object} options - Options
+     * @property {Array} steps - Steps
+     * @property {boolean} submitting - Submitting
+     * @property {Object} values - Values
+     */
     const state = ref<State>({
       currentStep: 0,
       errors: [],
@@ -341,10 +351,22 @@ export default defineComponent({
       submitting: false,
       values: {},
     });
-    const isMounted = ref(false);
+
+    /**
+     * Update state values
+     * @description Update value
+     * @param {string} fieldId - Field id
+     * @param {any} value - Value
+     */
     const updateValue = (fieldId: string, value: any) => {
       state.value.values[fieldId] = value;
     };
+
+    /**
+     * Save data
+     * @description emit data back
+     * @param {string} fieldId - Field id
+     */
     const saveData = (data: any) => {
       emit("updateData", data);
     };
@@ -423,6 +445,10 @@ export default defineComponent({
       return true;
     };
 
+    /**
+     * Validate all steps
+     * @description Validate all steps
+     */
     const validateAllSteps = () => {
       state.value.errors = [];
       const steps = state.value.steps;
@@ -466,12 +492,11 @@ export default defineComponent({
 
     onMounted(() => {
       loadProps();
-      isMounted.value = true;
+      state.value.isMounted = true;
     });
 
     return {
       updateValue,
-      isMounted,
       state,
       submitForm,
       validateStepFields,
