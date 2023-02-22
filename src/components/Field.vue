@@ -149,6 +149,10 @@ export default defineComponent({
       type: Array,
       default: () => [],
     },
+    fetchData: {
+      type: Function,
+      required: false,
+    },
     field: {
       type: Object as PropType<Field>,
       required: true,
@@ -238,44 +242,25 @@ export default defineComponent({
      * getData
      * @param url
      * @param fieldId
-     * @param resourceName
-     * @returns data from an api source
+     * @returns data from an external/api source
      */
-    const getData = (url: string, fieldId: string, resourceName: string) => {
-      // setTimeout(() => {
-      //   if (resourceName) {
-      //     try {
-      //       const resourceStore = useResourceStore(resourceName)();
-      //       return resourceStore.getList().then(({ data }) => {
-      //         if (typeof data == "undefined") {
-      //           return null;
-      //         }
-      //         state.value.options[fieldId] = data.data ? data.data : data;
-      //         return data.data ? data.data : data;
-      //       });
-      //     } catch (e) {
-      //       // TODO ERROR LOG
-      //       console.log(e);
-      //     }
-      //   }
-      //   ApiService.get(url).then((res) => {
-      //     state.value.options[fieldId] = res.data.data;
-      //     return res.data.data;
-      //   });
-      // }, 1);
+    const getData = (url: string, fieldId: string) => {
+      if (props.fetchData) {
+        return props.fetchData(url, fieldId);
+      }
     };
 
     /**
      * Retrieve data from api server
      */
-    const getApiData = (url: string, id: string, resourceName: string) => {
-      // if (
-      //   Object.keys(props.state.options).length === 0 &&
-      //   isMounted.value === true
-      // ) {
-      //   getData(url, id, resourceName);
-      // }
-      // return props.state.options[id];
+    const getApiData = (url: string, id: string) => {
+      if (
+        Object.keys(props.state.options).length === 0 &&
+        isMounted.value === true
+      ) {
+        getData(url, id);
+      }
+      return props.state.options[id];
     };
 
     /**
@@ -285,7 +270,7 @@ export default defineComponent({
      */
     const getFieldOptions = (field: any) => {
       if (field.optionsUrl) {
-        return getApiData(field.optionsUrl, field.id, field.resourceName);
+        return getApiData(field.optionsUrl, field.id);
       } else if (field.localData) {
         return field.localData;
       }
