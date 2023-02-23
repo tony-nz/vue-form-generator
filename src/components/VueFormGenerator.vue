@@ -323,7 +323,7 @@ export default defineComponent({
       default: () => ({}),
     },
     fetchData: {
-      type: Function as PropType<(parameter: string) => void>,
+      type: Function as PropType<(parameter: Object) => void>,
       required: false,
     },
     form: {

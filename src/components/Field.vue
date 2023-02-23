@@ -150,7 +150,7 @@ export default defineComponent({
       default: () => [],
     },
     fetchData: {
-      type: Function as PropType<(parameter: string) => void>,
+      type: Function as PropType<(parameter: Object) => void>,
       required: false,
     },
     field: {
@@ -245,8 +245,10 @@ export default defineComponent({
      * @returns data from an external/api source
      */
     const getData = (url: string, fieldId: string) => {
+      console.log("getData");
       if (props.fetchData) {
-        return props.fetchData(url, fieldId);
+        console.log("Inside getData if props.fetchData")
+        return props.fetchData({ url, fieldId });
       }
     };
 
@@ -254,6 +256,7 @@ export default defineComponent({
      * Retrieve data from api server
      */
     const getApiData = (url: string, id: string) => {
+      console.log("getApiData");
       if (
         Object.keys(props.state.options).length === 0 &&
         isMounted.value === true
