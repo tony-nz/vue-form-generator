@@ -150,7 +150,7 @@ export default defineComponent({
       default: () => [],
     },
     fetchData: {
-      type: Function,
+      type: Function as PropType<(parameter: string) => void>,
       required: false,
     },
     field: {

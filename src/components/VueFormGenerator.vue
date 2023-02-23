@@ -188,8 +188,8 @@
                   <Accordion v-if="field.display == 'accordion'" class="mt-4">
                     <AccordionTab :header="field.label">
                       <Field
-                        @fetchData="fetchData ? fetchData : null"
                         @update="updateValue"
+                        :fetchData="fetchData"
                         :field="field"
                         :state="state"
                         :value="state.values[field.id]"
@@ -198,8 +198,8 @@
                   </Accordion>
                   <Field
                     v-else
-                    @fetchData="fetchData ? fetchData : null"
                     @update="updateValue"
+                    :fetchData="fetchData"
                     :field="field"
                     :state="state"
                     :value="state.values[field.id]"
@@ -323,7 +323,7 @@ export default defineComponent({
       default: () => ({}),
     },
     fetchData: {
-      type: Function,
+      type: Function as PropType<(parameter: string) => void>,
       required: false,
     },
     form: {
