@@ -257,6 +257,7 @@ export default defineComponent({
      */
     const getApiData = (url: string, id: string) => {
       console.log("getApiData");
+      console.log(props.state.options);
       if (
         Object.keys(props.state.options).length === 0 &&
         isMounted.value === true

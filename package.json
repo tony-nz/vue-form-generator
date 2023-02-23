@@ -1,7 +1,7 @@
 {
   "author": "Tony Myers",
   "name": "@tony-nz/vue-form-generator",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "main": "dist/index",
   "typings": "dist/index",
   "license": "MIT",
