@@ -1,7 +1,7 @@
 {
   "author": "Tony Myers",
   "name": "@tony-nz/vue-form-generator",
-  "version": "1.0.22",
+  "version": "1.0.48",
   "main": "dist/index",
   "typings": "dist/index",
   "license": "MIT",
@@ -25,7 +25,6 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "postinstall": "node ./scripts/update-tailwind-config.js",
     "prepublishOnly": "yarn build"
   },
   "description": "Vue Form Generator is a powerful and flexible form creation tool for Vue.js applications. It generates forms from a configuration file and provides different frontend rendering options such as form, tabs, and steps. The tool uses Tailwind CSS and PrimeVue UI component library to create attractive and responsive forms. Additionally, it can retrieve data from a defined API provider. With Vue Form Generator, users can quickly create customized and dynamic forms that seamlessly integrate with their Vue.js applications.",

@@ -97,7 +97,7 @@
     </div>
     <div v-else>
       <component
-        v-if="field.type"
+        v-if="field && field.type"
         v-model="localValue"
         :value="localValue"
         :name="field.id"
@@ -150,7 +150,7 @@ export default defineComponent({
       default: () => [],
     },
     fetchData: {
-      type: Function as PropType<(parameter: Object) => void>,
+      type: Function as PropType<(parameter: Object) => Promise<void>>,
       required: false,
     },
     field: {
@@ -170,6 +170,7 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
+    const dropdownOptions: any = ref([]);
     const isMounted = ref(false);
 
     /**
@@ -244,22 +245,14 @@ export default defineComponent({
      * @param fieldId
      * @returns data from an external/api source
      */
-    const getData = (url: string, fieldId: string) => {
-      console.log("getData");
+    async function getData (url: string, fieldId: string, resourceName: string) {
       if (props.fetchData) {
-        console.log("Inside getData if props.fetchData")
-        return props.fetchData({ url, fieldId });
+        props.fetchData({ url, fieldId, resourceName }).then((data: any) => {
+          dropdownOptions.value[fieldId] = data;
+        });
       }
-    };
-
-    /**
-     * Retrieve data from api server
-     */
-    const getApiData = (url: string, id: string) => {
-      if (isMounted.value === true) {
-        return getData(url, id);
-      }
-    };
+      return dropdownOptions.value[fieldId];
+    }
 
     /**
      * getFieldOptions
@@ -268,7 +261,8 @@ export default defineComponent({
      */
     const getFieldOptions = (field: any) => {
       if (field.optionsUrl) {
-        return getApiData(field.optionsUrl, field.id);
+        getData(field.optionsUrl, field.id, field.resourceName);
+        return dropdownOptions.value[field.id];
       } else if (field.localData) {
         return field.localData;
       }
@@ -353,15 +347,16 @@ export default defineComponent({
     });
 
     return {
+      formatOption,
+      formatValue,
       getComponent,
+      getData,
       getFieldOptions,
       getLabelType,
       isFieldVisible,
-      setFileFieldValue,
-      formatValue,
-      formatOption,
       isMounted,
       localValue,
+      setFileFieldValue,
     };
   },
 });

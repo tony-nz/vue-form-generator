@@ -2,7 +2,6 @@
   <form v-if="state.isMounted" ref="form" novalidate @submit.prevent="submitForm">
     <input name="hidden" type="text" class="hidden" />
     <template v-if="form && Object.keys(form).length > 0">
-      <!-- Step header Component -->
       <div
         v-if="type === 'steps'"
         class="mb-4 lg:border-t lg:border-b lg:border-gray-200 text-left"
@@ -103,7 +102,6 @@
           </ol>
         </nav>
       </div>
-      <!-- Tab header Component -->
       <div v-if="type === 'tabs'">
         <div class="sm:hidden">
           <label for="tabs" class="sr-only">Select a tab</label>
@@ -323,7 +321,7 @@ export default defineComponent({
       default: () => ({}),
     },
     fetchData: {
-      type: Function as PropType<(parameter: Object) => void>,
+      type: Function as PropType<(parameter: Object) => Promise<void>>,
       required: false,
     },
     form: {
@@ -357,25 +355,6 @@ export default defineComponent({
       submitting: false,
       values: {},
     });
-
-    /**
-     * Update state values
-     * @description Update value
-     * @param {string} fieldId - Field id
-     * @param {any} value - Value
-     */
-    const updateValue = (fieldId: string, value: any) => {
-      state.value.values[fieldId] = value;
-    };
-
-    /**
-     * Save data
-     * @description emit data back
-     * @param {string} fieldId - Field id
-     */
-    const saveData = (data: any) => {
-      emit("updateData", data);
-    };
 
     /**
      * Load props
@@ -425,30 +404,32 @@ export default defineComponent({
     };
 
     /**
-     * Validate step fields
-     * @description Validate required fields for current step
+     * Save data
+     * @description emit data back
+     * @param {string} fieldId - Field id
      */
-    const validateStepFields = () => {
-      const currentStep = state.value.steps[state.value.currentStep];
-      const requiredFields = currentStep.requiredFields;
-      const values = state.value.values;
-      // clear all step status
-      state.value.steps.forEach((step) => {
-        step.status = "";
-      });
-      state.value.errors = [];
-      currentStep.status = "";
-      const errors = requiredFields.filter((field) => !values[field]);
-      if (errors.length) {
-        // loop through errors and set error message
-        errors.forEach((error) => {
-          state.value.errors[error] = "This field is required";
-        });
-        // state.value.errors = errors;
-        return false;
+    const saveData = (data: any) => {
+      emit("updateData", data);
+    };
+
+    /**
+     * Submit form
+     * @description Submit form
+     */
+    const submitForm = () => {
+      if (validateAllSteps()) {
+        saveData(state.value.values);
       }
-      currentStep.status = "complete";
-      return true;
+    };
+
+    /**
+     * Update state values
+     * @description Update value
+     * @param {string} fieldId - Field id
+     * @param {any} value - Value
+     */
+    const updateValue = (fieldId: string, value: any) => {
+      state.value.values[fieldId] = value;
     };
 
     /**
@@ -480,20 +461,35 @@ export default defineComponent({
         errors.forEach((error) => {
           state.value.errors[error] = "This field is required";
         });
-        // state.value.errors = errors;
         return false;
       }
       return true;
     };
 
     /**
-     * Submit form
-     * @description Submit form
+     * Validate step fields
+     * @description Validate required fields for current step
      */
-    const submitForm = () => {
-      if (validateAllSteps()) {
-        saveData(state.value.values);
+    const validateStepFields = () => {
+      const currentStep = state.value.steps[state.value.currentStep];
+      const requiredFields = currentStep.requiredFields;
+      const values = state.value.values;
+      // clear all step status
+      state.value.steps.forEach((step) => {
+        step.status = "";
+      });
+      state.value.errors = [];
+      currentStep.status = "";
+      const errors = requiredFields.filter((field) => !values[field]);
+      if (errors.length) {
+        // loop through errors and set error message
+        errors.forEach((error) => {
+          state.value.errors[error] = "This field is required";
+        });
+        return false;
       }
+      currentStep.status = "complete";
+      return true;
     };
 
     onMounted(() => {
@@ -502,9 +498,9 @@ export default defineComponent({
     });
 
     return {
-      updateValue,
       state,
       submitForm,
+      updateValue,
       validateStepFields,
     };
   },
