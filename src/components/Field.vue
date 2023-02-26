@@ -256,15 +256,9 @@ export default defineComponent({
      * Retrieve data from api server
      */
     const getApiData = (url: string, id: string) => {
-      console.log("getApiData");
-      console.log(props.state.options);
-      if (
-        Object.keys(props.state.options).length === 0 &&
-        isMounted.value === true
-      ) {
-        getData(url, id);
+      if (isMounted.value === true) {
+        return getData(url, id);
       }
-      return props.state.options[id];
     };
 
     /**
