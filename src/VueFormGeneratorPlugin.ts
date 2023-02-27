@@ -1,7 +1,7 @@
 import { App, Plugin } from "vue";
-import { VueFormGeneratorOptions } from "./types/VueFormGeneratorOptions";
+import type { VueFormGeneratorOptions } from "./types/VueFormGeneratorOptions";
 import VueFormGenerator from "./components/VueFormGenerator.vue";
-import "./assets/styles.css";
+import "./assets/style.css";
 
 export const VueFormGeneratorPlugin: Plugin = {
   install(app: App, options: VueFormGeneratorOptions) {

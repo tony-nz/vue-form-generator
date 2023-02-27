@@ -16,6 +16,7 @@
     "noImplicitAny": false,
     "allowJs": true,
     "baseUrl": ".",
+    "isolatedModules": true,
     "paths": {
       "@/*": [
         "src/*"
