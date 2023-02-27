@@ -139,7 +139,8 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, PropType, ref } from "vue";
+import { computed, defineComponent, inject, onMounted, PropType, ref } from "vue";
+import { VueFormGeneratorOptions } from "../types/VueFormGeneratorOptions";
 import type { Field } from "../types/VueFormGenerator";
 
 export default defineComponent({
@@ -245,11 +246,18 @@ export default defineComponent({
      * @param fieldId
      * @returns data from an external/api source
      */
-    async function getData (url: string, fieldId: string, resourceName: string) {
-      if (props.fetchData) {
+    async function getData(url: string, fieldId: string, resourceName: string) {
+      const vueFormGeneratorOptions: VueFormGeneratorOptions | undefined = inject("vueFormGenerator");
+      if(props.fetchData) {
         props.fetchData({ url, fieldId, resourceName }).then((data: any) => {
           dropdownOptions.value[fieldId] = data;
         });
+      } else if (vueFormGeneratorOptions && typeof vueFormGeneratorOptions.defaultFetchData == "function") {
+        vueFormGeneratorOptions.defaultFetchData({ url, fieldId, resourceName }).then(
+          (data: any) => {
+            dropdownOptions.value[fieldId] = data;
+          }
+        );
       }
       return dropdownOptions.value[fieldId];
     }
