@@ -13,7 +13,7 @@
           >
             <li
               v-for="(step, stepIdx) in form"
-              :key="step.id"
+              :key="stepIdx"
               class="relative overflow-hidden flex-1"
             >
               <div
@@ -169,7 +169,7 @@
           >
             <div class="mb-4 pb-2 border-b">
               <label
-                :for="child.id"
+                :for="child.label"
                 class="block text-lg font-medium text-gray-700"
                 >{{ child.label }}</label
               >
@@ -186,6 +186,7 @@
                   <Accordion v-if="field.display == 'accordion'" class="mt-4">
                     <AccordionTab :header="field.label">
                       <Field
+                        v-if="field.id"
                         @update="updateValue"
                         :fetchData="fetchData"
                         :field="field"
@@ -195,7 +196,7 @@
                     </AccordionTab>
                   </Accordion>
                   <Field
-                    v-else
+                    v-else-if="field.id"
                     @update="updateValue"
                     :fetchData="fetchData"
                     :field="field"
@@ -284,7 +285,9 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref } from "vue";
-import Field from "./Field.vue";
+import type { Form as VueFormGeneratorForm } from "../../types/VueFormGenerator";
+import Field from "../Field";
+import "../../style.css";
 
 interface Steps {
   errors: Record<string, any>;
@@ -325,7 +328,7 @@ export default defineComponent({
       required: false,
     },
     form: {
-      type: Array,
+      type: Array as PropType<Array<VueFormGeneratorForm>>,
       required: true,
     },
     type: {

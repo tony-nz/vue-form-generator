@@ -140,8 +140,8 @@
 
 <script lang="ts">
 import { computed, defineComponent, inject, onMounted, PropType, ref } from "vue";
-import { VueFormGeneratorOptions } from "../types/VueFormGeneratorOptions";
-import type { Field } from "../types/VueFormGenerator";
+import { VueFormGeneratorOptions } from "../../types/VueFormGeneratorOptions";
+import type { Field } from "../../types/VueFormGenerator";
 
 export default defineComponent({
   name: "Field",
