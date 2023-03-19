@@ -52,7 +52,7 @@
             }"
             :trueValue="1"
             :falseValue="0"
-            class="dark:bg-slate-900 dark:border-none"
+            class="dark:border-none"
           />
         </div>
         <div class="ml-3 text-sm">

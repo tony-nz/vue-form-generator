@@ -160,7 +160,7 @@
         <div
           v-if="item"
           v-show="state.currentStep === index || type === 'form'"
-          class="p-4 mb-4 bg-gray-100 grid grid-cols-12 gap-4 text-left"
+          class="p-4 mb-4 bg-gray-100 dark:bg-slate-800 grid grid-cols-12 gap-4 text-left"
         >
           <div
             v-for="(child, index) in item.children"
