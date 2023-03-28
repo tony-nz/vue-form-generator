@@ -284,7 +284,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, PropType, ref } from "vue";
+import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 import type { Form as VueFormGeneratorForm } from "../../types/VueFormGenerator";
 import Field from "../Field";
 import "../../style.css";
@@ -330,6 +330,10 @@ export default defineComponent({
     form: {
       type: Array as PropType<Array<VueFormGeneratorForm>>,
       required: true,
+    },
+    onChange: {
+      type: Boolean,
+      default: false,
     },
     type: {
       type: String,
@@ -494,6 +498,15 @@ export default defineComponent({
       currentStep.status = "complete";
       return true;
     };
+
+    watch(
+      () => state.value.values,
+      (value) => {
+        if (props.onChange) {
+          submitForm();
+        }
+      }
+    );
 
     onMounted(() => {
       loadProps();
