@@ -331,7 +331,7 @@ export default defineComponent({
       type: Array as PropType<Array<VueFormGeneratorForm>>,
       required: true,
     },
-    save: {
+    submit: {
       type: Boolean,
       default: false,
     },
@@ -504,10 +504,14 @@ export default defineComponent({
       emit("onChange", state.value.values);
     }, { deep: true });
 
-    // watch for changes on save prop
-    watch(() => props.save, () => {
-      if (props.save) {
-        submitForm();
+    // watch for changes on submit prop
+    watch(() => props.submit, () => {
+      if (props.submit) {
+        if (validateAllSteps()) {
+          emit("validated", true, state.value.values);
+        } else {
+          emit("validated", false);
+        }
       }
     });
 
