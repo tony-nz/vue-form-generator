@@ -331,6 +331,10 @@ export default defineComponent({
       type: Array as PropType<Array<VueFormGeneratorForm>>,
       required: true,
     },
+    save: {
+      type: Boolean,
+      default: false,
+    },
     type: {
       type: String,
       default: "form",
@@ -495,9 +499,17 @@ export default defineComponent({
       return true;
     };
 
+    // watch for changes in values, send back to parent
     watch(state.value.values, () => {
       emit("onChange", state.value.values);
     }, { deep: true });
+
+    // watch for changes on save prop
+    watch(() => props.save, () => {
+      if (props.save) {
+        submitForm();
+      }
+    });
 
     onMounted(() => {
       loadProps();
