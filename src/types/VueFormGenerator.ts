@@ -27,6 +27,15 @@ interface Field {
   optionsLabel?: string;
   resourceName?: string;
   readonly?: boolean;
+  mode: string;
+  decrementButtonClass: string;
+  incrementButtonClass: string;
+  incrementButtonIcon: string;
+  decrementButtonIcon: string;
+  buttonLayout: string;
+  step: string;
+  showButtons: boolean;
+  currency: string;
 }
 
 interface ChildField {

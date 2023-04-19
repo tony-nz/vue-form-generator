@@ -118,12 +118,19 @@
         :trueValue="1"
         :falseValue="0"
         :max-date="new Date()"
-        showButtons
+        :showButtons="field.showButtons ? field.showButtons : false"
         :optionValue="field.optionValue ? field.optionValue : 'id'"
         :optionLabel="field.optionsLabel ? field.optionsLabel : 'name'"
-        mode="decimal"
+        :mode="field.mode ? field.mode : 'decimal'"
         date-format="dd-mm-yy"
         class="dark:bg-slate-900 dark:border-none"
+        :decrementButtonClass="field.decrementButtonClass ? field.decrementButtonClass : 'p-button-danger'"
+        :incrementButtonClass="field.incrementButtonClass ? field.incrementButtonClass : 'p-button-success'"
+        :incrementButtonIcon="field.incrementButtonIcon ? field.incrementButtonIcon : 'pi pi-plus'"
+        :decrementButtonIcon="field.decrementButtonIcon ? field.decrementButtonIcon : 'pi pi-minus'"
+        :buttonLayout="field.buttonLayout ? field.buttonLayout : 'horizontal'"
+        :step="field.step ? field.step : '1'"
+        :currency="field.currency ? field.currency : 'NZD'"
       />
       <span
         v-if="Object.keys(state.errors).length > 0 && state.errors[field.id]"
