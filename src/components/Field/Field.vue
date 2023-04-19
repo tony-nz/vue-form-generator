@@ -248,7 +248,7 @@ export default defineComponent({
      */
     async function getData(url: string, fieldId: string, resourceName: string) {
       const vueFormGeneratorOptions: VueFormGeneratorOptions | undefined = inject("vueFormGenerator");
-      if(props.fetchData) {
+      if(props.fetchData && resourceName) {
         props.fetchData({ url, fieldId, resourceName }).then((data: any) => {
           dropdownOptions.value[fieldId] = data;
         });
