@@ -170,6 +170,18 @@ export default defineComponent({
       default: () => ({}),
     },
   },
+  // methods: {
+  //   getFieldOptions(field: any) {
+  //     console.log("getFieldOptions", field);
+  //     if (field.optionsUrl) {
+  //       return this.getData(field.optionsUrl, field.id, field.resourceName);
+  //       // return dropdownOptions.value[field.id];
+  //     } else if (field.localData) {
+  //       return field.localData;
+  //     }
+  //     return field.options;
+  //   },
+  // },
   setup(props, { emit }) {
     const dropdownOptions: any = ref([]);
     const isMounted = ref(false);
@@ -248,18 +260,20 @@ export default defineComponent({
      */
     async function getData(url: string, fieldId: string, resourceName: string) {
       const vueFormGeneratorOptions: VueFormGeneratorOptions | undefined = inject("vueFormGenerator");
-      if(props.fetchData && resourceName) {
-        props.fetchData({ url, fieldId, resourceName }).then((data: any) => {
-          dropdownOptions.value[fieldId] = data;
-        });
-      } else if (vueFormGeneratorOptions && typeof vueFormGeneratorOptions.defaultFetchData == "function") {
-        vueFormGeneratorOptions.defaultFetchData({ url, fieldId, resourceName }).then(
-          (data: any) => {
+      setTimeout(() => {
+        if(props.fetchData && resourceName) {
+          props.fetchData({ url, fieldId, resourceName }).then((data: any) => {
             dropdownOptions.value[fieldId] = data;
-          }
-        );
-      }
-      return dropdownOptions.value[fieldId];
+          });
+        } else if (vueFormGeneratorOptions && typeof vueFormGeneratorOptions.defaultFetchData == "function") {
+          vueFormGeneratorOptions.defaultFetchData({ url, fieldId, resourceName }).then(
+            (data: any) => {
+              dropdownOptions.value[fieldId] = data;
+            }
+          );
+        }
+        return dropdownOptions.value[fieldId];
+      }, 1);
     }
 
     /**
@@ -269,7 +283,9 @@ export default defineComponent({
      */
     const getFieldOptions = (field: any) => {
       if (field.optionsUrl) {
-        getData(field.optionsUrl, field.id, field.resourceName);
+        if (Object.keys(dropdownOptions.value).length === 0 && isMounted.value === true) {
+          getData(field.optionsUrl, field.id, field.resourceName);
+        }
         return dropdownOptions.value[field.id];
       } else if (field.localData) {
         return field.localData;
