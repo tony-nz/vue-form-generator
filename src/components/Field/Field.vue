@@ -170,18 +170,6 @@ export default defineComponent({
       default: () => ({}),
     },
   },
-  // methods: {
-  //   getFieldOptions(field: any) {
-  //     console.log("getFieldOptions", field);
-  //     if (field.optionsUrl) {
-  //       return this.getData(field.optionsUrl, field.id, field.resourceName);
-  //       // return dropdownOptions.value[field.id];
-  //     } else if (field.localData) {
-  //       return field.localData;
-  //     }
-  //     return field.options;
-  //   },
-  // },
   setup(props, { emit }) {
     const dropdownOptions: any = ref([]);
     const isMounted = ref(false);
