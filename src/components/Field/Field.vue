@@ -122,7 +122,7 @@
         :optionValue="field.optionValue ? field.optionValue : 'id'"
         :optionLabel="field.optionsLabel ? field.optionsLabel : 'name'"
         :mode="field.mode ? field.mode : 'decimal'"
-        date-format="dd-mm-yy"
+        :date-format="field.dateFormat ? field.dateFormat : 'dd/mm/yy'"
         class="dark:bg-slate-900 dark:border-none"
         :decrementButtonClass="field.decrementButtonClass ? field.decrementButtonClass : 'p-button-danger'"
         :incrementButtonClass="field.incrementButtonClass ? field.incrementButtonClass : 'p-button-success'"

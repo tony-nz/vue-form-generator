@@ -36,6 +36,7 @@ interface Field {
   step?: string;
   showButtons?: boolean;
   currency?: string;
+  dateFormat?: string;
 }
 
 interface ChildField {
