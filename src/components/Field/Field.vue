@@ -131,7 +131,11 @@
         :buttonLayout="field.buttonLayout ? field.buttonLayout : 'horizontal'"
         :step="field.step ? field.step : '1'"
         :currency="field.currency ? field.currency : 'NZD'"
-      />
+      >
+        <template #option="slotProps">
+          <slot name="option" v-bind:slotProps="slotProps" />
+        </template>
+      </component>
       <span
         v-if="Object.keys(state.errors).length > 0 && state.errors[field.id]"
         class="text-red-700"
