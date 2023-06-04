@@ -3,16 +3,6 @@ interface Conditional {
   value?: string | number | boolean;
 }
 
-interface GooglePlace {
-  apiKey?: string;
-  libraries?: Array<string>;
-  bounds?: boolean | object | string;
-  location?: boolean | object | string;
-  offset?: boolean;
-  radius?: boolean;
-  types?: boolean | Array<string>;
-}
-
 interface Field {
   conditional?: Conditional;
   hint?: string;
@@ -47,7 +37,6 @@ interface Field {
   showButtons?: boolean;
   currency?: string;
   dateFormat?: string;
-  googlePlace?: GooglePlace;
 }
 
 interface ChildField {

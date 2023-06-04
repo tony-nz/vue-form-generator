@@ -9,7 +9,7 @@ export const VueFormGeneratorPlugin: Plugin = {
      * Register global properties
      */
     // app.config.globalProperties.$vueFormGenerator = options;
-    app.provide("vueFormGenerator", options);
+    app.provide("vueFormGeneratorOptions", options);
 
     /**
      * Register VueFormGenerator component

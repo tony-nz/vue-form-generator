@@ -14,6 +14,7 @@
         :optionLabel="field.optionsLabel ? field.optionsLabel : 'name'"
         :suggestions="addressPredictions"
         @complete="searchAddress"
+        class="w-full"
       >
         <template #option="slotProps">
           <div class="flex align-options-center">
@@ -213,6 +214,7 @@ export default defineComponent({
     const addressGeocoder = ref();
     const dropdownOptions: any = ref([]);
     const isMounted = ref(false);
+    const options = inject("vueFormGeneratorOptions") as VueFormGeneratorOptions;
 
     /**
      * formatOption
@@ -464,12 +466,12 @@ export default defineComponent({
      * Get request options, cross check with props.field.googlePlace
      */
     const getRequestOptions = () => {
-      const options = {
+      const requestOptions = {
         input: localValue.value,
-        ...props.field.googlePlace,
+        ...options?.googlePlace,
       };
 
-      return options;
+      return requestOptions;
     };
 
     /**
@@ -507,15 +509,22 @@ export default defineComponent({
         if (window.google) {
           resolve;
         } else {
-          if (!props.field.googlePlace?.apiKey) {
+          if(!options?.googlePlace?.apiKey) {
             reject(new Error("No API key provided"));
           } else {
-          const script = document.createElement("script");
-            script.src = `https://maps.googleapis.com/maps/api/js?key=${props.field.googlePlace.apiKey}&libraries=places`;
+            const script = document.createElement("script");
+            const libraries = options?.googlePlace?.libraries || ["geometry", "places"];
+            // callback function for google maps
+            (window as any).googleMapsCallback = function () {
+              return true;
+            };
+            
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${options?.googlePlace.apiKey}&libraries=${libraries.join(",")}&callback=googleMapsCallback`;
             script.async = true;
             script.defer = true;
             script.onload = resolve;
             script.onerror = reject;
+
             document.head.appendChild(script);
           }
         }
@@ -526,13 +535,15 @@ export default defineComponent({
      * onMounted
      */
     onMounted(() => {
-      loadGoogleMaps().then(() => {
-        addressService.value = new window.google.maps.places.AutocompleteService();
-        addressGeocoder.value = new window.google.maps.Geocoder();
-      }).catch(() => {
-        addressService.value = new window.google.maps.places.AutocompleteService();
-        addressGeocoder.value = new window.google.maps.Geocoder();
-      });
+      if (props.field.type == "address") {
+        loadGoogleMaps().then(() => {
+          addressService.value = new window.google.maps.places.AutocompleteService();
+          addressGeocoder.value = new window.google.maps.Geocoder();
+        }).catch(() => {
+          addressService.value = new window.google.maps.places.AutocompleteService();
+          addressGeocoder.value = new window.google.maps.Geocoder();
+        });
+      }
       isMounted.value = true;
     });
 
