@@ -8,7 +8,23 @@
     >
       {{ field.label }}
     </label>
-    <div v-if="field.type == 'file'">
+    <div v-if="field.type == 'address'">
+      <AutoComplete
+        v-model="localValue"
+        :optionLabel="field.optionsLabel ? field.optionsLabel : 'name'"
+        :suggestions="addressPredictions"
+        @complete="searchAddress"
+      >
+        <template #option="slotProps">
+          <div class="flex align-options-center">
+            <div @click="selectAddress(slotProps.option)">
+              {{ field.optionsLabel ? slotProps.option[field.optionsLabel] : slotProps.option.description }}
+            </div>
+          </div>
+        </template>
+      </AutoComplete>
+    </div>
+    <div v-else-if="field.type == 'file'">
       <FileUpload
         :name="`${field.id}`"
         :multiple="field.multiple || false"
@@ -39,7 +55,7 @@
         {{ state.uploadErrors[field.id] }}
       </p>
     </div>
-    <div v-if="field.type == 'switch'">
+    <div v-else-if="field.type == 'switch'">
       <div class="flex items-start">
         <div class="flex items-center h-5">
           <InputSwitch
@@ -154,6 +170,15 @@ import { computed, defineComponent, inject, onMounted, PropType, ref } from "vue
 import { VueFormGeneratorOptions } from "../../types/VueFormGeneratorOptions";
 import type { Field } from "../../types/VueFormGenerator";
 
+/**
+ * This is a workaround for the google maps typescript definitions
+ */
+declare global {
+  interface Window {
+    google: any;
+  }
+}
+
 export default defineComponent({
   name: "Field",
   props: {
@@ -182,6 +207,9 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
+    const addressPredictions = ref();
+    const addressService = ref();
+    const addressGeocoder = ref();
     const dropdownOptions: any = ref([]);
     const isMounted = ref(false);
 
@@ -222,6 +250,8 @@ export default defineComponent({
      */
     const getComponent = (fieldType: string) => {
       switch (fieldType) {
+        case "address":
+          return "Checkbox";
         case "checkbox":
           return "Checkbox";
         case "date":
@@ -365,11 +395,130 @@ export default defineComponent({
       emit("setFileFieldValue", field, $event);
     };
 
+    /**
+     * geocode
+     * @param options
+     * 
+     * Geocode an address
+     */
+    const geocode = (options: any) => {
+      const geocoder = new window.google.maps.Geocoder();
+
+      return new Promise((resolve, reject) => {
+        if (!options.geometry) {
+          geocoder.geocode(options, (results: any, status: any) => {
+            if (status === window.google.maps.GeocoderStatus.OK) {
+              resolve(results);
+            } else {
+              reject(status);
+            }
+          });
+        } else {
+          resolve([options]);
+        }
+      });
+    };
+
+    /**
+     * selectAddress
+     * @param place 
+     */
+
+    const selectAddress = (place: any) => {
+      geocode({ placeId: place.place_id }).then((response: any) => {
+        const result = {
+          address: response[0].formatted_address,
+          place_id: response[0].place_id,
+          latitude: response[0].geometry.location.lat(),
+          longitude: response[0].geometry.location.lng(),
+        };
+
+        console.log(result);
+        localValue.value = result;
+      });
+    };
+
+    /**
+     * getRequestOptions
+     * @returns options
+     * 
+     * Get request options, cross check with props.field.googlePlace
+     */
+    const getRequestOptions = () => {
+      const options = {
+        input: localValue.value,
+        ...props.field.googlePlace,
+      };
+
+      return options;
+    };
+
+    /**
+     * searchAddress
+     */
+    const searchAddress = () => {
+      return new Promise((resolve, reject) => {
+        if (!localValue.value) {
+          addressPredictions.value = false;
+          reject(new Error('Input empty'));
+        } else {
+          addressService.value.getPlacePredictions(
+            getRequestOptions(),
+            (response: any, status: any) => {
+              switch (status) {
+                case window.google.maps.places.PlacesServiceStatus.OK:
+                addressPredictions.value = response;
+                  resolve(response);
+                  break;
+                default:
+                  reject(new Error(`Error with status: ${status}`));
+              }
+            }
+          );
+        }
+      });
+    };
+
+    /**
+     * loadGoogleMaps
+     * 
+     */
+    const loadGoogleMaps = () => {
+      return new Promise((resolve, reject) => {
+        if (window.google) {
+          resolve;
+        } else {
+          if (!props.field.googlePlace?.apiKey) {
+            reject(new Error("No API key provided"));
+          } else {
+          const script = document.createElement("script");
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${props.field.googlePlace.apiKey}&libraries=places`;
+            script.async = true;
+            script.defer = true;
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+          }
+        }
+      });
+    };
+
+    /**
+     * onMounted
+     */
     onMounted(() => {
+      loadGoogleMaps().then(() => {
+        addressService.value = new window.google.maps.places.AutocompleteService();
+        addressGeocoder.value = new window.google.maps.Geocoder();
+      }).catch(() => {
+        addressService.value = new window.google.maps.places.AutocompleteService();
+        addressGeocoder.value = new window.google.maps.Geocoder();
+      });
       isMounted.value = true;
     });
 
     return {
+      addressPredictions,
       formatOption,
       formatValue,
       getComponent,
@@ -379,6 +528,8 @@ export default defineComponent({
       isFieldVisible,
       isMounted,
       localValue,
+      searchAddress,
+      selectAddress,
       setFileFieldValue,
     };
   },
