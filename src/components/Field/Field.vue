@@ -10,7 +10,7 @@
     </label>
     <div v-if="field.type == 'address'">
       <AutoComplete
-        v-model="localValue"
+        v-model="addressValue"
         :optionLabel="field.optionsLabel ? field.optionsLabel : 'name'"
         :suggestions="addressPredictions"
         @complete="searchAddress"
@@ -199,6 +199,7 @@ export default defineComponent({
       required: true,
     },
     value: {
+      type: [Object, Array, Number, String, Boolean],
       required: true,
     },
     values: {
@@ -371,6 +372,24 @@ export default defineComponent({
     };
 
     /**
+     * addressValue
+     * @returns emit update
+     * @returns emit input
+     */
+    const addressValue = computed({
+      get() {
+        if (typeof props.value === "object" && props.value !== null) {
+          const valueObj = props.value as Record<string, any>;
+          return valueObj.address;
+        }
+        return props.value;
+      },
+      set(value) {
+        emit("update", props.field?.id, value);
+      },
+    });
+
+    /**
      * localValue
      * @returns emit update
      * @returns emit input
@@ -519,6 +538,7 @@ export default defineComponent({
 
     return {
       addressPredictions,
+      addressValue,
       formatOption,
       formatValue,
       getComponent,
