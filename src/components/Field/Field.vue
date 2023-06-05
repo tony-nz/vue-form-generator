@@ -454,8 +454,7 @@ export default defineComponent({
           longitude: response[0].geometry.location.lng(),
         };
 
-        console.log(result);
-        localValue.value = result;
+        addressValue.value = result;
       });
     };
 
@@ -467,7 +466,7 @@ export default defineComponent({
      */
     const getRequestOptions = () => {
       const requestOptions = {
-        input: localValue.value,
+        input: addressValue.value,
         ...options?.googlePlace,
       };
 
@@ -479,7 +478,7 @@ export default defineComponent({
      */
     const searchAddress = () => {
       return new Promise((resolve, reject) => {
-        if (!localValue.value) {
+        if (!addressValue.value) {
           addressPredictions.value = false;
           reject(new Error('Input empty'));
         } else {
@@ -507,6 +506,8 @@ export default defineComponent({
     const loadGoogleMaps = () => {
       return new Promise((resolve, reject) => {
         if (window.google) {
+          addressService.value = new window.google.maps.places.AutocompleteService();
+          addressGeocoder.value = new window.google.maps.Geocoder();
           resolve;
         } else {
           if(!options?.googlePlace?.apiKey) {
@@ -537,9 +538,6 @@ export default defineComponent({
     onMounted(() => {
       if (props.field.type == "address") {
         loadGoogleMaps().then(() => {
-          addressService.value = new window.google.maps.places.AutocompleteService();
-          addressGeocoder.value = new window.google.maps.Geocoder();
-        }).catch(() => {
           addressService.value = new window.google.maps.places.AutocompleteService();
           addressGeocoder.value = new window.google.maps.Geocoder();
         });
