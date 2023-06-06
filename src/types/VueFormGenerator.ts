@@ -3,40 +3,46 @@ interface Conditional {
   value?: string | number | boolean;
 }
 
+interface Resource {
+  name?: string;
+  stateList?: string;
+  stateUser?: boolean;
+}
+
 interface Field {
+  buttonLayout?: string;
+  class?: string;
   conditional?: Conditional;
-  hint?: string;
+  currency?: string;
+  dateFormat?: string;
+  decrementButtonClass?: string;
+  decrementButtonIcon?: string;
   disabled?: boolean;
   display?: string;
   editorStyle?: string;
   fileType?: string;
   formats?: Array<string>;
+  hint?: string;
   id?: string;
-  label?: string;
-  type?: string;
-  placeholder?: string;
-  required?: boolean;
-  multiple?: boolean;
-  maxFiles?: number;
-  maxFileSize?: number;
-  class?: string;
-  options?: Array<any>;
-  localData?: Array<any>;
-  optionsUrl?: string;
-  optionValue?: string;
-  optionsLabel?: string;
-  resourceName?: string;
-  readonly?: boolean;
-  mode?: string;
-  decrementButtonClass?: string;
   incrementButtonClass?: string;
   incrementButtonIcon?: string;
-  decrementButtonIcon?: string;
-  buttonLayout?: string;
-  step?: string;
+  label?: string;
+  localData?: Array<any>;
+  maxFiles?: number;
+  maxFileSize?: number;
+  mode?: string;
+  multiple?: boolean;
+  optionValue?: string;
+  options?: Array<any>;
+  optionsLabel?: string;
+  optionsUrl?: string;
+  placeholder?: string;
+  readonly?: boolean;
+  required?: boolean;
+  resource?: Resource;
   showButtons?: boolean;
-  currency?: string;
-  dateFormat?: string;
+  step?: string;
+  type?: string;
 }
 
 interface ChildField {
@@ -54,4 +60,4 @@ interface Form {
 
 export default Form;
 
-export type { ChildField, Field, Form };
+export type { ChildField, Field, Form, Resource };

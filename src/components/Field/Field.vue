@@ -169,7 +169,7 @@
 <script lang="ts">
 import { computed, defineComponent, inject, onMounted, PropType, ref } from "vue";
 import { VueFormGeneratorOptions } from "../../types/VueFormGeneratorOptions";
-import type { Field } from "../../types/VueFormGenerator";
+import type { Field, Resource } from "../../types/VueFormGenerator";
 
 /**
  * This is a workaround for the google maps typescript definitions
@@ -290,15 +290,15 @@ export default defineComponent({
      * @param fieldId
      * @returns data from an external/api source
      */
-    async function getData(url: string, fieldId: string, resourceName: string) {
+    async function getData(url: string, fieldId: string, resource: Resource) {
       const vueFormGeneratorOptions: VueFormGeneratorOptions | undefined = inject("vueFormGenerator");
       setTimeout(() => {
-        if(props.fetchData && resourceName) {
-          props.fetchData({ url, fieldId, resourceName }).then((data: any) => {
+        if(props.fetchData && resource) {
+          props.fetchData({ url, fieldId, resource }).then((data: any) => {
             dropdownOptions.value[fieldId] = data;
           });
         } else if (vueFormGeneratorOptions && typeof vueFormGeneratorOptions.defaultFetchData == "function") {
-          vueFormGeneratorOptions.defaultFetchData({ url, fieldId, resourceName }).then(
+          vueFormGeneratorOptions.defaultFetchData({ url, fieldId, resource }).then(
             (data: any) => {
               dropdownOptions.value[fieldId] = data;
             }
@@ -316,7 +316,7 @@ export default defineComponent({
     const getFieldOptions = (field: any) => {
       if (field.optionsUrl) {
         if (Object.keys(dropdownOptions.value).length === 0 && isMounted.value === true) {
-          getData(field.optionsUrl, field.id, field.resourceName);
+          getData(field.optionsUrl, field.id, field.resource);
         }
         return dropdownOptions.value[field.id];
       } else if (field.localData) {
