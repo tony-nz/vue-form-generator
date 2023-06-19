@@ -21,6 +21,7 @@ interface Field {
   display?: string;
   editorStyle?: string;
   fileType?: string;
+  filter?: boolean;
   formats?: Array<string>;
   hint?: string;
   id?: string;

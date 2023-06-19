@@ -126,6 +126,7 @@
         }"
         :placeholder="field.placeholder || 'Please select...'"
         :readonly="field.readonly"
+        :filter="field.filter ? field.filter : false"
         :formats="field.formats"
         :editorStyle="field.editorStyle"
         :options="getFieldOptions(field)"
