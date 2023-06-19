@@ -181,7 +181,7 @@
               <template v-for="(field, index) in child.fields" :key="index">
                 <div
                   v-if="!allowedFields || allowedFields?.includes(field?.id)"
-                  :class="field.class ? field.class : 'col-span-12'"
+                  :class="[field.class ? field.class : 'col-span-12', field.id && isFieldHidden(field.id) ? 'hidden' : '']"
                 >
                   <Accordion v-if="field.display == 'accordion'" class="mt-4">
                     <AccordionTab :header="field.label">
@@ -330,6 +330,9 @@ export default defineComponent({
     form: {
       type: Array as PropType<Array<VueFormGeneratorForm>>,
       required: true,
+    },
+    hiddenFields: {
+      type: Array,
     },
     submit: {
       type: Boolean,
@@ -499,6 +502,14 @@ export default defineComponent({
       return true;
     };
 
+    // check for hidden field
+    const isFieldHidden = (fieldId: string) => {
+      if (props.hiddenFields) {
+        return props.hiddenFields.includes(fieldId);
+      }
+      return false;
+    };
+
     // watch for changes in values, send back to parent
     watch(state.value.values, () => {
       emit("onChange", state.value.values);
@@ -521,6 +532,7 @@ export default defineComponent({
     });
 
     return {
+      isFieldHidden,
       state,
       submitForm,
       updateValue,
