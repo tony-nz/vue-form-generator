@@ -116,39 +116,40 @@
       <component
         v-if="field && field.type"
         v-model="localValue"
-        :value="localValue"
-        :name="field.id"
-        :is="getComponent(field.type)"
-        :required="field.required"
-        :class="{
-          'input w-full': field.type != 'switch' ? true : false,
-          'p-invalid': state.errors[field.id],
-        }"
-        :placeholder="field.placeholder || 'Please select...'"
-        :readonly="field.readonly"
+        :auto-clear="false"
+        :buttonLayout="field.buttonLayout ? field.buttonLayout : 'horizontal'"
+        :class="Object.assign(
+          {
+            'input w-full': field.type !== 'switch',
+            'p-invalid': state.errors[field.id]
+          }, field.class !== undefined ? field.class : {'dark:bg-slate-900 dark:border-none': true}
+        )"
+        :currency="field.currency ? field.currency : 'NZD'"
+        :date-format="field.dateFormat ? field.dateFormat : 'dd/mm/yy'"
+        :decrementButtonClass="field.decrementButtonClass ? field.decrementButtonClass : 'p-button-danger'"
+        :decrementButtonIcon="field.decrementButtonIcon ? field.decrementButtonIcon : 'pi pi-minus'"
+        :editorStyle="field.editorStyle"
+        :falseValue="0"
         :filter="field.filter ? field.filter : false"
         :formats="field.formats"
-        :editorStyle="field.editorStyle"
-        :options="getFieldOptions(field)"
-        :auto-clear="false"
-        :min="0"
-        :max="100"
-        :trueValue="1"
-        :falseValue="0"
-        :max-date="new Date()"
-        :showButtons="field.showButtons ? field.showButtons : false"
-        :optionValue="field.optionValue ? field.optionValue : 'id'"
-        :optionLabel="field.optionsLabel ? field.optionsLabel : 'name'"
-        :mode="field.mode ? field.mode : 'decimal'"
-        :date-format="field.dateFormat ? field.dateFormat : 'dd/mm/yy'"
-        class="dark:bg-slate-900 dark:border-none"
-        :decrementButtonClass="field.decrementButtonClass ? field.decrementButtonClass : 'p-button-danger'"
         :incrementButtonClass="field.incrementButtonClass ? field.incrementButtonClass : 'p-button-success'"
         :incrementButtonIcon="field.incrementButtonIcon ? field.incrementButtonIcon : 'pi pi-plus'"
-        :decrementButtonIcon="field.decrementButtonIcon ? field.decrementButtonIcon : 'pi pi-minus'"
-        :buttonLayout="field.buttonLayout ? field.buttonLayout : 'horizontal'"
+        :is="getComponent(field.type)"
+        :max="100"
+        :max-date="new Date()"
+        :min="0"
+        :mode="field.mode ? field.mode : 'decimal'"
+        :name="field.id"
+        :optionLabel="field.optionsLabel ? field.optionsLabel : 'name'"
+        :optionValue="field.optionValue ? field.optionValue : 'id'"
+        :options="getFieldOptions(field)"
+        :placeholder="field.placeholder || 'Please select...'"
+        :readonly="field.readonly"
+        :required="field.required"
+        :showButtons="field.showButtons ? field.showButtons : false"
         :step="field.step ? field.step : '1'"
-        :currency="field.currency ? field.currency : 'NZD'"
+        :trueValue="1"
+        :value="localValue"
       >
         <template #option="slotProps">
           <slot name="option" v-bind:slotProps="slotProps" />
