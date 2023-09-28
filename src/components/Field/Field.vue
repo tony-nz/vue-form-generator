@@ -293,7 +293,7 @@ export default defineComponent({
      * @returns data from an external/api source
      */
     async function getData(url: string, fieldId: string, resource: Resource) {
-      const vueFormGeneratorOptions: VueFormGeneratorOptions | undefined = inject("vueFormGenerator");
+      const vueFormGeneratorOptions: VueFormGeneratorOptions | undefined = inject("vueFormGeneratorOptions");
       setTimeout(() => {
         if(props.fetchData && resource) {
           props.fetchData({ url, fieldId, resource }).then((data: any) => {
