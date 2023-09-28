@@ -317,6 +317,14 @@ export default defineComponent({
      */
     const getFieldOptions = (field: any) => {
       if (field.optionsUrl) {
+        // Extract field names from the optionsUrl - /${date}/${id}
+        const fieldNames = field.optionsUrl.match(/\${(.*?)}/g);
+        if (fieldNames) {
+          fieldNames.forEach((fieldName: string) => {
+            const fieldNameWithoutBraces = fieldName.replace("${", "").replace("}", "");
+            field.optionsUrl = field.optionsUrl.replace(fieldName, props.values[fieldNameWithoutBraces]);
+          });
+        }
         if (Object.keys(dropdownOptions.value).length === 0 && isMounted.value === true) {
           getData(field.optionsUrl, field.id, field.resource);
         }
