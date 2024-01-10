@@ -167,7 +167,7 @@
             :key="index"
             :class="child.class ? child.class : 'col-span-12'"
           >
-            <div class="mb-4 pb-2 border-b">
+            <div v-if="child.label" class="mb-4 pb-2 border-b">
               <label
                 :for="child.label"
                 class="block text-lg font-medium text-gray-700"

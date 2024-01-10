@@ -4,7 +4,7 @@
     <label
       v-if="field.label && field.type !== 'switch'"
       :for="field.id"
-      class="block text-sm font-medium text-gray-700"
+      class="mb-2"
     >
       {{ field.label }}
     </label>
@@ -147,6 +147,7 @@
         :readonly="field.readonly"
         :required="field.required"
         :showButtons="field.showButtons ? field.showButtons : false"
+        :size="field.size ? field.size : null"
         :step="field.step ? field.step : '1'"
         :trueValue="1"
         :value="localValue"

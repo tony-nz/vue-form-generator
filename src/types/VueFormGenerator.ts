@@ -42,6 +42,7 @@ interface Field {
   required?: boolean;
   resource?: Resource;
   showButtons?: boolean;
+  size?: string;
   step?: string;
   type?: string;
 }
