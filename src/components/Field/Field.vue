@@ -1,13 +1,12 @@
 <template>
-  <div v-if="isMounted && isFieldVisible(field) && field.id">
-    <component :is="getLabelType(field)" class="label" />
-    <label
+  <div v-if="isMounted && isFieldVisible(field) && field.id" class="grid gap-2">
+    <component
       v-if="field.label && field.type !== 'switch'"
+      :is="getLabelType(field)" class="label"
       :for="field.id"
-      class="mb-2"
     >
       {{ field.label }}
-    </label>
+    </component>
     <div v-if="field.type == 'address'">
       <AutoComplete
         v-model="addressValue"
