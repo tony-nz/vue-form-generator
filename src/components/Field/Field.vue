@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isMounted && isFieldVisible(field) && field.id" class="grid gap-2">
+  <div v-if="isMounted && isFieldVisible(field) && field.id" class="grid gap-1">
     <component
       v-if="field.label && field.type !== 'switch'"
       :is="getLabelType(field)" class="label"

@@ -29,7 +29,7 @@
                   <span
                     :class="
                       state.steps[stepIdx].status === 'complete'
-                        ? 'bg-green-400'
+                        ? 'bg-primary-400'
                         : 'bg-gray-200'
                     "
                     class="absolute top-0 left-0 w-1 h-full bg-transparent group-hover:bg-gray-200 lg:w-full lg:h-1 lg:bottom-0 lg:top-auto"
@@ -45,7 +45,7 @@
                       <span
                         :class="
                           state.steps[stepIdx].status === 'complete'
-                            ? 'bg-green-500 border-green-400'
+                            ? 'bg-primary-500 border-primary-400'
                             : 'bg-gray-200'
                         "
                         class="w-10 h-10 flex items-center justify-center border-2 border-gray-200 rounded-full"
@@ -148,7 +148,7 @@
               </button>
               <button
                 type="submit"
-                class="ml-auto my-2 bg-green-500 p-2 px-4 rounded-md text-white font-bold"
+                class="ml-auto my-2 bg-primary-500 p-2 px-4 rounded-md text-white font-bold"
               >
                 Save
               </button>
@@ -212,13 +212,12 @@
 
       <div
         v-if="showSubmit && type === 'form'"
-        class="mt-10 flex justify-between pt-6 border-t border-gray-200"
+        class="flex border-t border-gray-200 p-4 bg-gray-100 dark:bg-slate-800 justify-end"
       >
         <div>
           <button
-            @click="submitForm()"
             type="submit"
-            class="bg-green-500 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-green-500"
+            class="bg-primary-500 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary-500"
           >
             Save
           </button>
@@ -241,7 +240,7 @@
             <li v-for="step in state.steps" :key="step.id">
               <a
                 v-if="step.status === 'complete'"
-                class="block w-2.5 h-2.5 bg-green-600 rounded-full hover:bg-green-900"
+                class="block w-2.5 h-2.5 bg-primary-600 rounded-full hover:bg-primary-900"
               >
                 <span class="sr-only">{{ step.name }}</span>
               </a>
@@ -254,7 +253,7 @@
                   <span class="w-full h-full rounded-full bg-indigo-200" />
                 </span>
                 <span
-                  class="relative block w-2.5 h-2.5 bg-green-600 rounded-full"
+                  class="relative block w-2.5 h-2.5 bg-primary-600 rounded-full"
                   aria-hidden="true"
                 />
                 <span class="sr-only">{{ step.name }}</span>
@@ -288,7 +287,7 @@
           <button
             v-if="state.currentStep === form.length - 1"
             type="submit"
-            class="bg-green-500 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-green-500"
+            class="bg-primary-500 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary-500"
           >
             Finish
           </button>
