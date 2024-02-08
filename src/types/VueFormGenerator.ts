@@ -29,8 +29,8 @@ interface Field {
   incrementButtonIcon?: string;
   label?: string;
   localData?: Array<any>;
-  minDate: string;
-  maxDate: string;
+  minDate?: string;
+  maxDate?: string;
   maxFiles?: number;
   maxFileSize?: number;
   mode?: string;
