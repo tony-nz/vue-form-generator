@@ -1,7 +1,7 @@
 {
   "name": "@tony-nz/vue-form-generator",
   "author": "Tony Myers",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "private": false,
   "main": "dist/index.umd.js",
   "module": "dist/index.es.js",
@@ -34,6 +34,7 @@
     "@types/node": "^18.14.2",
     "@vitejs/plugin-vue": "^4.0.0",
     "autoprefixer": "^10.4.13",
+    "date-fns": "^3.3.1",
     "postcss": "^8.4.21",
     "postcss-cli": "^10.1.0",
     "rollup-plugin-copy": "^3.4.0",

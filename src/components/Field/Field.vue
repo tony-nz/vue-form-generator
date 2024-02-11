@@ -173,6 +173,7 @@
 import { computed, defineComponent, inject, onMounted, PropType, ref } from "vue";
 import { VueFormGeneratorOptions } from "../../types/VueFormGeneratorOptions";
 import type { Field, Resource } from "../../types/VueFormGenerator";
+import { format } from "date-fns";
 
 /**
  * This is a workaround for the google maps typescript definitions
@@ -411,8 +412,14 @@ export default defineComponent({
       get() {
         return props.value;
       },
-      set(value) {
-        emit("update", props.field?.id, value);
+      set(value: any) {
+        if (props.field.type === "date") {
+          const dateFormat = props.field.dateFormat || "yyyy-MM-dd";
+          const formattedDate = format(new Date(value), dateFormat);
+          emit('update', props.field?.id, formattedDate);
+        } else {
+          emit("update", props.field?.id, value);
+        }
       },
     });
 
