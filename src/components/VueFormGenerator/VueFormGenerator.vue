@@ -214,6 +214,7 @@
         v-if="showSubmit && type === 'form'"
         class="flex border-t border-gray-200 p-4 bg-gray-100 dark:bg-slate-800 justify-end"
       >
+        <slot name="footer" />
         <div>
           <button
             type="submit"
