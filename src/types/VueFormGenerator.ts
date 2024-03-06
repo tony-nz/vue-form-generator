@@ -46,6 +46,7 @@ interface Field {
   showButtons?: boolean;
   size?: string;
   step?: string;
+  timeOnly?: boolean;
   type?: string;
 }
 

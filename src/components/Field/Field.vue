@@ -149,6 +149,7 @@
         :showButtons="field.showButtons ? field.showButtons : false"
         :size="field.size ? field.size : null"
         :step="field.step ? field.step : '1'"
+        :timeOnly="field.timeOnly ? field.timeOnly : false"
         :trueValue="1"
         :value="localValue"
       >
