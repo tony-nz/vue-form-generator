@@ -2,7 +2,8 @@
   <div v-if="isMounted && isFieldVisible(field) && field.id" class="grid gap-1">
     <component
       v-if="field.label && field.type !== 'switch'"
-      :is="getLabelType(field)" class="label"
+      :is="getLabelType(field)"
+      class="label"
       :for="field.id"
     >
       {{ field.label }}
@@ -18,7 +19,11 @@
         <template #option="slotProps">
           <div class="flex align-options-center">
             <div @click="selectAddress(slotProps.option)">
-              {{ field.optionsLabel ? slotProps.option[field.optionsLabel] : slotProps.option.description }}
+              {{
+                field.optionsLabel
+                  ? slotProps.option[field.optionsLabel]
+                  : slotProps.option.description
+              }}
             </div>
           </div>
         </template>
@@ -111,28 +116,73 @@
         {{ state.errors[field.id] }}
       </span>
     </div>
+    <div
+      v-else-if="field.type === 'colorpicker' || field.type === 'colourpicker'"
+      class="space-x-2"
+    >
+      <ColorPicker
+        v-model="localValue"
+        :inputId="field.id"
+        :name="field.id"
+        :required="field.required"
+        :class="{
+          'p-invalid': state.errors[field.id],
+        }"
+      />
+      <InputText
+        v-model="localValue"
+        :name="field.id"
+        :required="field.required"
+        :class="{
+          'p-invalid': state.errors[field.id],
+        }"
+      />
+      <span
+        v-if="Object.keys(state.errors).length > 0 && state.errors[field.id]"
+        class="text-red-700"
+      >
+        {{ state.errors[field.id] }}
+      </span>
+    </div>
     <div v-else>
       <component
         v-if="field && field.type"
         v-model="localValue"
         :auto-clear="false"
         :buttonLayout="field.buttonLayout ? field.buttonLayout : 'horizontal'"
-        :class="Object.assign(
-          {
-            'input w-full': field.type !== 'switch',
-            'p-invalid': state.errors[field.id]
-          }, field.class !== undefined ? field.class : {'dark:bg-slate-900 dark:border-none': true}
-        )"
+        :class="
+          Object.assign(
+            {
+              'input w-full': field.type !== 'switch',
+              'p-invalid': state.errors[field.id],
+            },
+            field.class !== undefined
+              ? field.class
+              : { 'dark:bg-slate-900 dark:border-none': true }
+          )
+        "
         :currency="field.currency ? field.currency : 'NZD'"
         :date-format="field.dateFormat ? field.dateFormat : 'dd/mm/yy'"
-        :decrementButtonClass="field.decrementButtonClass ? field.decrementButtonClass : 'p-button-danger'"
-        :decrementButtonIcon="field.decrementButtonIcon ? field.decrementButtonIcon : 'pi pi-minus'"
+        :decrementButtonClass="
+          field.decrementButtonClass
+            ? field.decrementButtonClass
+            : 'p-button-danger'
+        "
+        :decrementButtonIcon="
+          field.decrementButtonIcon ? field.decrementButtonIcon : 'pi pi-minus'
+        "
         :editorStyle="field.editorStyle"
         :falseValue="0"
         :filter="field.filter ? field.filter : false"
         :formats="field.formats"
-        :incrementButtonClass="field.incrementButtonClass ? field.incrementButtonClass : 'p-button-success'"
-        :incrementButtonIcon="field.incrementButtonIcon ? field.incrementButtonIcon : 'pi pi-plus'"
+        :incrementButtonClass="
+          field.incrementButtonClass
+            ? field.incrementButtonClass
+            : 'p-button-success'
+        "
+        :incrementButtonIcon="
+          field.incrementButtonIcon ? field.incrementButtonIcon : 'pi pi-plus'
+        "
         :is="getComponent(field.type)"
         :max="100"
         :min-date="field.minDate ? field.minDate : null"
@@ -171,7 +221,14 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, inject, onMounted, PropType, ref } from "vue";
+import {
+  computed,
+  defineComponent,
+  inject,
+  onMounted,
+  PropType,
+  ref,
+} from "vue";
 import { VueFormGeneratorOptions } from "../../types/VueFormGeneratorOptions";
 import type { Field, Resource } from "../../types/VueFormGenerator";
 import { format } from "date-fns";
@@ -219,7 +276,9 @@ export default defineComponent({
     const addressGeocoder = ref();
     const dropdownOptions: any = ref([]);
     const isMounted = ref(false);
-    const options = inject("vueFormGeneratorOptions") as VueFormGeneratorOptions;
+    const options = inject(
+      "vueFormGeneratorOptions"
+    ) as VueFormGeneratorOptions;
 
     /**
      * formatOption
@@ -283,8 +342,6 @@ export default defineComponent({
         case "text":
         case "tel":
           return "InputText";
-        case "colorpicker":
-          return "ColorPicker";
         default:
           return "InputText";
       }
@@ -296,18 +353,22 @@ export default defineComponent({
      * @returns data from an external/api source
      */
     async function getData(url: string, fieldId: string, resource: Resource) {
-      const vueFormGeneratorOptions: VueFormGeneratorOptions | undefined = inject("vueFormGeneratorOptions");
+      const vueFormGeneratorOptions: VueFormGeneratorOptions | undefined =
+        inject("vueFormGeneratorOptions");
       setTimeout(() => {
         if (props.fetchData) {
           props.fetchData({ url, fieldId, resource }).then((data: any) => {
             dropdownOptions.value[fieldId] = data;
           });
-        } else if (vueFormGeneratorOptions && typeof vueFormGeneratorOptions.defaultFetchData == "function") {
-          vueFormGeneratorOptions.defaultFetchData({ url, fieldId, resource }).then(
-            (data: any) => {
+        } else if (
+          vueFormGeneratorOptions &&
+          typeof vueFormGeneratorOptions.defaultFetchData == "function"
+        ) {
+          vueFormGeneratorOptions
+            .defaultFetchData({ url, fieldId, resource })
+            .then((data: any) => {
               dropdownOptions.value[fieldId] = data;
-            }
-          );
+            });
         }
         return dropdownOptions.value[fieldId];
       }, 1);
@@ -324,11 +385,19 @@ export default defineComponent({
         const fieldNames = field.optionsUrl.match(/\${(.*?)}/g);
         if (fieldNames) {
           fieldNames.forEach((fieldName: string) => {
-            const fieldNameWithoutBraces = fieldName.replace("${", "").replace("}", "");
-            field.optionsUrl = field.optionsUrl.replace(fieldName, props.values[fieldNameWithoutBraces]);
+            const fieldNameWithoutBraces = fieldName
+              .replace("${", "")
+              .replace("}", "");
+            field.optionsUrl = field.optionsUrl.replace(
+              fieldName,
+              props.values[fieldNameWithoutBraces]
+            );
           });
         }
-        if (Object.keys(dropdownOptions.value).length === 0 && isMounted.value === true) {
+        if (
+          Object.keys(dropdownOptions.value).length === 0 &&
+          isMounted.value === true
+        ) {
           getData(field.optionsUrl, field.id, field.resource);
         }
         return dropdownOptions.value[field.id];
@@ -417,7 +486,7 @@ export default defineComponent({
         if (props.field.type === "date") {
           const dateFormat = props.field.dateFormat || "yyyy-MM-dd";
           const formattedDate = format(new Date(value), dateFormat);
-          emit('update', props.field?.id, formattedDate);
+          emit("update", props.field?.id, formattedDate);
         } else {
           emit("update", props.field?.id, value);
         }
@@ -438,7 +507,7 @@ export default defineComponent({
     /**
      * geocode
      * @param options
-     * 
+     *
      * Geocode an address
      */
     const geocode = (options: any) => {
@@ -461,7 +530,7 @@ export default defineComponent({
 
     /**
      * selectAddress
-     * @param place 
+     * @param place
      */
 
     const selectAddress = (place: any) => {
@@ -480,7 +549,7 @@ export default defineComponent({
     /**
      * getRequestOptions
      * @returns options
-     * 
+     *
      * Get request options, cross check with props.field.googlePlace
      */
     const getRequestOptions = () => {
@@ -499,14 +568,14 @@ export default defineComponent({
       return new Promise((resolve, reject) => {
         if (!addressValue.value) {
           addressPredictions.value = false;
-          reject(new Error('Input empty'));
+          reject(new Error("Input empty"));
         } else {
           addressService.value.getPlacePredictions(
             getRequestOptions(),
             (response: any, status: any) => {
               switch (status) {
                 case window.google.maps.places.PlacesServiceStatus.OK:
-                addressPredictions.value = response;
+                  addressPredictions.value = response;
                   resolve(response);
                   break;
                 default:
@@ -520,26 +589,32 @@ export default defineComponent({
 
     /**
      * loadGoogleMaps
-     * 
+     *
      */
     const loadGoogleMaps = () => {
       return new Promise((resolve, reject) => {
         if (window.google) {
-          addressService.value = new window.google.maps.places.AutocompleteService();
+          addressService.value =
+            new window.google.maps.places.AutocompleteService();
           addressGeocoder.value = new window.google.maps.Geocoder();
           resolve;
         } else {
-          if(!options?.googlePlace?.apiKey) {
+          if (!options?.googlePlace?.apiKey) {
             reject(new Error("No API key provided"));
           } else {
             const script = document.createElement("script");
-            const libraries = options?.googlePlace?.libraries || ["geometry", "places"];
+            const libraries = options?.googlePlace?.libraries || [
+              "geometry",
+              "places",
+            ];
             // callback function for google maps
             (window as any).googleMapsCallback = function () {
               return true;
             };
-            
-            script.src = `https://maps.googleapis.com/maps/api/js?key=${options?.googlePlace.apiKey}&libraries=${libraries.join(",")}&callback=googleMapsCallback`;
+
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${
+              options?.googlePlace.apiKey
+            }&libraries=${libraries.join(",")}&callback=googleMapsCallback`;
             script.async = true;
             script.defer = true;
             script.onload = resolve;
@@ -557,7 +632,8 @@ export default defineComponent({
     onMounted(() => {
       if (props.field.type == "address") {
         loadGoogleMaps().then(() => {
-          addressService.value = new window.google.maps.places.AutocompleteService();
+          addressService.value =
+            new window.google.maps.places.AutocompleteService();
           addressGeocoder.value = new window.google.maps.Geocoder();
         });
       }
