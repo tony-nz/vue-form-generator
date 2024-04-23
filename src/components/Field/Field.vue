@@ -69,7 +69,11 @@
             :name="field.id"
             :required="field.required"
             :class="{
-              'input w-full': field.type != 'switch' ? true : false,
+              'input w-full': !(
+                field.type === 'switch' || field.type === 'number'
+              )
+                ? true
+                : false,
             }"
             :trueValue="1"
             :falseValue="0"
@@ -153,7 +157,9 @@
         :class="
           Object.assign(
             {
-              'input w-full': field.type !== 'switch',
+              'input w-full': !(
+                field.type === 'switch' || field.type === 'number'
+              ),
               'p-invalid': state.errors[field.id],
             },
             field.class !== undefined
