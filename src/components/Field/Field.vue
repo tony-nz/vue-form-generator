@@ -396,7 +396,7 @@ export default defineComponent({
               .replace("}", "");
             field.optionsUrl = field.optionsUrl.replace(
               fieldName,
-              props.values[fieldNameWithoutBraces]
+              props.state.values[fieldNameWithoutBraces]
             );
           });
         }
