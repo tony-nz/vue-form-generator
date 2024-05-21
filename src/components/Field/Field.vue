@@ -605,9 +605,7 @@ export default defineComponent({
           addressGeocoder.value = new window.google.maps.Geocoder();
           resolve;
         } else {
-          if (!options?.googlePlace?.apiKey) {
-            reject(new Error("No API key provided"));
-          } else {
+          if (options?.googlePlace?.apiKey) {
             const script = document.createElement("script");
             const libraries = options?.googlePlace?.libraries || [
               "geometry",
