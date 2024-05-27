@@ -333,7 +333,7 @@ export default defineComponent({
           return "Editor";
         case "file":
           return "FileUpload";
-        case "mulitselect":
+        case "multiselect":
           return "MultiSelect";
         case "number":
           return "InputNumber";
