@@ -177,6 +177,7 @@
         :decrementButtonIcon="
           field.decrementButtonIcon ? field.decrementButtonIcon : 'pi pi-minus'
         "
+        :display="field.display ? field.display : 'chip'"
         :editorStyle="field.editorStyle"
         :falseValue="0"
         :filter="field.filter ? field.filter : false"
