@@ -1,5 +1,10 @@
 <template>
-  <form v-if="state.isMounted" ref="form" novalidate @submit.prevent="submitForm">
+  <form
+    v-if="state.isMounted"
+    ref="form"
+    novalidate
+    @submit.prevent="submitForm"
+  >
     <input name="hidden" type="text" class="hidden" />
     <template v-if="form && Object.keys(form).length > 0">
       <div
@@ -108,7 +113,7 @@
           <select
             id="tabs"
             name="tabs"
-            class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+            class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
           >
             <option
               v-for="(tab, tabIdx) in form"
@@ -128,7 +133,7 @@
                 @click="state.currentStep = tabIdx"
                 :class="[
                   state.currentStep === tabIdx
-                    ? 'border-indigo-500 text-indigo-600'
+                    ? 'border-primary-500 text-primary-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
                   'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm',
                 ]"
@@ -181,7 +186,10 @@
               <template v-for="(field, index) in child.fields" :key="index">
                 <div
                   v-if="!allowedFields || allowedFields?.includes(field?.id)"
-                  :class="[field.class ? field.class : 'col-span-12', field.id && isFieldHidden(field.id) ? 'hidden' : '']"
+                  :class="[
+                    field.class ? field.class : 'col-span-12',
+                    field.id && isFieldHidden(field.id) ? 'hidden' : '',
+                  ]"
                 >
                   <Accordion v-if="field.display == 'accordion'" class="mt-4">
                     <AccordionTab :header="field.label">
@@ -251,7 +259,7 @@
                 aria-current="step"
               >
                 <span class="absolute w-5 h-5 p-px flex" aria-hidden="true">
-                  <span class="w-full h-full rounded-full bg-indigo-200" />
+                  <span class="w-full h-full rounded-full bg-primary-200" />
                 </span>
                 <span
                   class="relative block w-2.5 h-2.5 bg-primary-600 rounded-full"
@@ -404,6 +412,13 @@ export default defineComponent({
                 .map((field: any) => field.id);
             })
             .flat(),
+          matchedFields: item.children
+            .map((child: any) => {
+              return child.fields
+                .filter((field: any) => field.matched)
+                .map((field: any) => field.id);
+            })
+            .flat(),
         };
       });
       state.value.steps.push(...steps);
@@ -438,6 +453,7 @@ export default defineComponent({
      * @param {string} fieldId - Field id
      */
     const saveData = (data: any) => {
+      console.log("updateData");
       emit("updateData", data);
     };
 
@@ -446,6 +462,7 @@ export default defineComponent({
      * @description Submit form
      */
     const submitForm = () => {
+      console.log("submitForm");
       if (validateAllSteps()) {
         saveData(state.value.values);
       }
@@ -469,6 +486,7 @@ export default defineComponent({
       state.value.errors = [];
       const steps = state.value.steps;
       const values = state.value.values;
+
       const errors = steps
         .map((step) => {
           const unfilledFields = step.requiredFields.filter(
@@ -509,6 +527,7 @@ export default defineComponent({
       });
       state.value.errors = [];
       currentStep.status = "";
+
       const errors = requiredFields.filter((field) => !values[field]);
       if (errors.length) {
         // loop through errors and set error message
@@ -530,20 +549,27 @@ export default defineComponent({
     };
 
     // watch for changes in values, send back to parent
-    watch(state.value.values, () => {
-      emit("onChange", state.value.values);
-    }, { deep: true });
+    watch(
+      state.value.values,
+      () => {
+        emit("onChange", state.value.values);
+      },
+      { deep: true }
+    );
 
     // watch for changes on submit prop
-    watch(() => props.submit, () => {
-      if (props.submit) {
-        if (validateAllSteps()) {
-          emit("validated", true, state.value.values);
-        } else {
-          emit("validated", false);
+    watch(
+      () => props.submit,
+      () => {
+        if (props.submit) {
+          if (validateAllSteps()) {
+            emit("validated", true, state.value.values);
+          } else {
+            emit("validated", false);
+          }
         }
       }
-    });
+    );
 
     onMounted(() => {
       loadProps();
