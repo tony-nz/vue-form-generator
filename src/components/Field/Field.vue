@@ -1,14 +1,14 @@
 <template>
-  <div v-if="isMounted && isFieldVisible(field) && field.id" class="grid gap-1">
+  <template v-if="isMounted && isFieldVisible(field) && field.id">
     <component
       v-if="field.label && field.type !== 'switch'"
       :is="getLabelType(field)"
-      class="label"
+      class="label mb-2"
       :for="field.id"
     >
       {{ field.label }}
     </component>
-    <div v-if="field.type == 'address'">
+    <template v-if="field.type == 'address'">
       <AutoComplete
         v-model="addressValue"
         :optionLabel="field.optionsLabel ? field.optionsLabel : 'name'"
@@ -28,8 +28,16 @@
           </div>
         </template>
       </AutoComplete>
-    </div>
-    <div v-else-if="field.type == 'file'">
+    </template>
+    <template v-if="field.type == 'slider'">
+      <InputText
+        v-if="field.showSliderInput"
+        v-model.number="localValue"
+        class="w-full mb-2"
+      />
+      <Slider v-model="localValue" :step="field.step || 1" />
+    </template>
+    <template v-else-if="field.type == 'file'">
       <FileUpload
         :name="`${field.id}`"
         :multiple="field.multiple || false"
@@ -44,6 +52,7 @@
           'border-red-500 border rounded': state.errors[field.id],
         }"
         @select="setFileFieldValue(field, $event)"
+        @upload="onUpload"
       >
         <template #empty>
           <p>
@@ -59,8 +68,8 @@
       <p v-if="state.uploadErrors[field.id]" class="mt-2 text-red-600">
         {{ state.uploadErrors[field.id] }}
       </p>
-    </div>
-    <div v-else-if="field.type == 'switch'">
+    </template>
+    <template v-else-if="field.type == 'switch'">
       <div class="flex items-start">
         <div class="flex items-center h-5">
           <InputSwitch
@@ -97,8 +106,8 @@
           </span>
         </div>
       </div>
-    </div>
-    <div v-else-if="field.type === 'radio'">
+    </template>
+    <template v-else-if="field.type === 'radio'">
       <div
         v-for="option of field.options"
         :key="option.id"
@@ -119,7 +128,7 @@
       >
         {{ state.errors[field.id] }}
       </span>
-    </div>
+    </template>
     <div
       v-else-if="field.type === 'colorpicker' || field.type === 'colourpicker'"
       class="space-x-2"
@@ -148,7 +157,7 @@
         {{ state.errors[field.id] }}
       </span>
     </div>
-    <div v-else>
+    <template v-else>
       <component
         v-if="field && field.type"
         v-model="localValue"
@@ -233,11 +242,11 @@
       >
         {{ state.errors[field.id] }}
       </span>
-    </div>
+    </template>
     <p v-if="field.hint" class="mt-2 text-sm italic text-gray-500">
       {{ field.hint }}
     </p>
-  </div>
+  </template>
 </template>
 
 <script lang="ts">
@@ -248,6 +257,7 @@ import {
   onMounted,
   PropType,
   ref,
+  watch,
 } from "vue";
 import { VueFormGeneratorOptions } from "../../types/VueFormGeneratorOptions";
 import type { Field, Resource } from "../../types/VueFormGenerator";
@@ -295,6 +305,7 @@ export default defineComponent({
     const addressService = ref();
     const addressGeocoder = ref();
     const dropdownOptions: any = ref([]);
+    const files = ref();
     const isMounted = ref(false);
     const options = inject(
       "vueFormGeneratorOptions"
@@ -345,8 +356,6 @@ export default defineComponent({
           return "Calendar";
         case "editor":
           return "Editor";
-        case "file":
-          return "FileUpload";
         case "multiselect":
           return "MultiSelect";
         case "number":
@@ -500,6 +509,9 @@ export default defineComponent({
      */
     const localValue = computed({
       get() {
+        if (props.value === "" && props.field.default) {
+          return props.field.default;
+        }
         return props.value;
       },
       set(value: any) {
@@ -508,6 +520,7 @@ export default defineComponent({
           const formattedDate = format(new Date(value), dateFormat);
           emit("update", props.field?.id, formattedDate);
         } else {
+          console.log("emit update", value);
           emit("update", props.field?.id, value);
         }
       },
@@ -520,8 +533,8 @@ export default defineComponent({
      *
      * Add files to state object fileFieldsFiles
      */
-    const setFileFieldValue = (field: Field, $event: any) => {
-      emit("setFileFieldValue", field, $event);
+    const setFileFieldValue = (field: Field, event: any) => {
+      onUpload(event);
     };
 
     /**
@@ -645,6 +658,31 @@ export default defineComponent({
     };
 
     /**
+     * onUpload
+     * @param event
+     */
+    const onUpload = async (event: any) => {
+      const file = event.files[0];
+      const formData: any = new FormData();
+
+      formData.append("file", file, file.name);
+      formData.append("filename", file.name);
+      formData.append("size", file.size);
+      formData.append("type", file.type);
+
+      // Clone the FormData object
+      const clonedFormData = new FormData();
+      for (const [key, value] of formData.entries()) {
+        clonedFormData.append(key, value);
+      }
+
+      // Assign the cloned FormData object to localValue
+      localValue.value = clonedFormData;
+
+      // tell parent we're a formData
+    };
+
+    /**
      * onMounted
      */
     onMounted(() => {
@@ -667,9 +705,11 @@ export default defineComponent({
       getData,
       getFieldOptions,
       getLabelType,
+      files,
       isFieldVisible,
       isMounted,
       localValue,
+      onUpload,
       searchAddress,
       selectAddress,
       setFileFieldValue,

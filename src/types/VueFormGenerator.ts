@@ -15,6 +15,7 @@ interface Field {
   conditional?: Conditional;
   currency?: string;
   dateFormat?: string;
+  default?: string | number | boolean | Array<any>;
   decrementButtonClass?: string;
   decrementButtonIcon?: string;
   disabled?: boolean;
@@ -44,6 +45,7 @@ interface Field {
   required?: boolean;
   resource?: Resource;
   showButtons?: boolean;
+  showSliderInput?: boolean;
   size?: string;
   step?: string;
   timeOnly?: boolean;

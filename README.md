@@ -151,6 +151,7 @@
      app.component("ProgressBar", ProgressBar);
      app.component("RadioButton", RadioButton);
      app.component("SelectButton", SelectButton);
+     app.component("Slider", Slider);
      app.component("Sidebar", Sidebar);
      app.component("TabPanel", TabPanel);
      app.component("TabView", TabView);

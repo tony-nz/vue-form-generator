@@ -327,6 +327,8 @@ interface State {
   options: Record<string, any>;
   steps: Array<Steps>;
   submitting: boolean;
+  uploadErrors: Array<string>;
+  uploadProgress: Array<string>;
   values: Record<string, any>;
 }
 export default defineComponent({
@@ -390,6 +392,8 @@ export default defineComponent({
       options: {},
       steps: [],
       submitting: false,
+      uploadErrors: [],
+      uploadProgress: [],
       values: {},
     });
 
