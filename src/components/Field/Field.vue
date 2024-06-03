@@ -131,7 +131,7 @@
     </template>
     <div
       v-else-if="field.type === 'colorpicker' || field.type === 'colourpicker'"
-      class="space-x-2"
+      class="flex justify-stretch space-x-2"
     >
       <ColorPicker
         v-model="localValue"
@@ -149,6 +149,7 @@
         :class="{
           'p-invalid': state.errors[field.id],
         }"
+        class="w-full"
       />
       <span
         v-if="Object.keys(state.errors).length > 0 && state.errors[field.id]"
