@@ -30,8 +30,8 @@ interface Field {
   incrementButtonIcon?: string;
   label?: string;
   localData?: Array<any>;
-  minDate?: string;
-  maxDate?: string;
+  minDate?: string | any;
+  maxDate?: string | any;
   maxFiles?: number;
   maxFileSize?: number;
   mode?: string;
@@ -48,6 +48,7 @@ interface Field {
   showSliderInput?: boolean;
   size?: string;
   step?: string;
+  timeFormat?: string;
   timeOnly?: boolean;
   type?: string;
 }

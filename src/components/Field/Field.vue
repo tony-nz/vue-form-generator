@@ -29,7 +29,10 @@
         </template>
       </AutoComplete>
     </template>
-    <template v-if="field.type == 'slider'">
+    <template v-else-if="field.type == 'time'">
+      <Calendar v-model="localValue" :name="field.id" timeOnly />
+    </template>
+    <template v-else-if="field.type == 'slider'">
       <InputText
         v-if="field.showSliderInput"
         v-model.number="localValue"
@@ -520,6 +523,10 @@ export default defineComponent({
           const dateFormat = props.field.dateFormat || "yyyy-MM-dd";
           const formattedDate = format(new Date(value), dateFormat);
           emit("update", props.field?.id, formattedDate);
+        } else if (props.field.type === "time") {
+          const timeFormat = props.field.timeFormat || "HH:mm:ss";
+          const formattedTime = format(new Date(value), timeFormat);
+          emit("update", props.field?.id, formattedTime);
         } else {
           console.log("emit update", value);
           emit("update", props.field?.id, value);
