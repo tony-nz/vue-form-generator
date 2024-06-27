@@ -223,16 +223,15 @@
         :trueValue="1"
         :value="localValue"
       >
-        <template
-          v-if="field.type === 'multiselect-DISABLED'"
-          #value="slotProps"
-        >
+        <template v-if="field.type === 'multiselect'" #value="slotProps">
           <template v-if="slotProps.value">
             <span
               v-for="item in slotProps.value"
               :key="item"
               class="inline-flex items-center py-0.5 px-3 mr-2 rounded-[1.14rem] text-surface-700 dark:text-white/70 bg-surface-200 dark:bg-surface-700"
-              >{{ item.name }}</span
+              >{{
+                field.optionsLabel ? item[field.optionsLabel] : item.name
+              }}</span
             >
           </template>
         </template>
