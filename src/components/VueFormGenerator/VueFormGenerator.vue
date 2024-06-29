@@ -457,7 +457,6 @@ export default defineComponent({
      * @param {string} fieldId - Field id
      */
     const saveData = (data: any) => {
-      console.log("updateData");
       emit("updateData", data);
     };
 
@@ -466,7 +465,6 @@ export default defineComponent({
      * @description Submit form
      */
     const submitForm = () => {
-      console.log("submitForm");
       if (validateAllSteps()) {
         saveData(state.value.values);
       }

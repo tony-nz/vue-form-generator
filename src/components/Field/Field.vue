@@ -515,7 +515,6 @@ export default defineComponent({
           const formattedTime = format(new Date(value), timeFormat);
           emit("update", props.field?.id, formattedTime);
         } else {
-          console.log("emit update", value);
           emit("update", props.field?.id, value);
         }
       },
