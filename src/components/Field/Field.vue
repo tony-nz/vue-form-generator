@@ -216,6 +216,7 @@
         :placeholder="field.placeholder || 'Please select...'"
         :readonly="field.readonly"
         :required="field.required"
+        :rows="field.rows ? field.rows : 3"
         :showButtons="field.showButtons ? field.showButtons : false"
         :size="field.size ? field.size : null"
         :step="field.step ? field.step : '1'"

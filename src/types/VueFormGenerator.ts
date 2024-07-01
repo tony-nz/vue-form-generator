@@ -44,6 +44,7 @@ interface Field {
   readonly?: boolean;
   required?: boolean;
   resource?: Resource;
+  rows?: number;
   showButtons?: boolean;
   showSliderInput?: boolean;
   size?: string;
