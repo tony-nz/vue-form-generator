@@ -25,6 +25,7 @@ interface Field {
   filter?: boolean;
   formats?: Array<string>;
   hint?: string;
+  insertHash?: boolean;
   id?: string;
   incrementButtonClass?: string;
   incrementButtonIcon?: string;

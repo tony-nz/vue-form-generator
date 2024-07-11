@@ -515,6 +515,19 @@ export default defineComponent({
           const timeFormat = props.field.timeFormat || "HH:mm:ss";
           const formattedTime = format(new Date(value), timeFormat);
           emit("update", props.field?.id, formattedTime);
+        } else if (
+          props.field.type === "colorpicker" ||
+          props.field.type === "colourpicker"
+        ) {
+          // check to see if value has "#" at the start, if not insert one
+          if (props.field.insertHash === false) {
+            emit("update", props.field?.id, value);
+          } else if (value.charAt(0) !== "#") {
+            value = `#${value}`;
+            emit("update", props.field?.id, value);
+          } else {
+            emit("update", props.field?.id, value);
+          }
         } else {
           emit("update", props.field?.id, value);
         }
