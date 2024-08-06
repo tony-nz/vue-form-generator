@@ -559,6 +559,20 @@ export default defineComponent({
       { deep: true }
     );
 
+    /**
+     * Watch for new prop data
+     */
+    watch(
+      () => props.data,
+      async (newData) => {
+        // loop through props.data and set values
+        Object.keys(newData).forEach((key) => {
+          state.value.values[key] = newData[key];
+        });
+      },
+      { deep: true }
+    );
+
     // watch for changes on submit prop
     watch(
       () => props.submit,
