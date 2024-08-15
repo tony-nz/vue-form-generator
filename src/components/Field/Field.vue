@@ -195,6 +195,7 @@
         :falseValue="0"
         :filter="field.filter ? field.filter : false"
         :formats="field.formats"
+        :hourFormat="field.hourFormat ? field.hourFormat : '12'"
         :incrementButtonClass="
           field.incrementButtonClass
             ? field.incrementButtonClass
@@ -218,6 +219,7 @@
         :required="field.required"
         :rows="field.rows ? field.rows : 3"
         :showButtons="field.showButtons ? field.showButtons : false"
+        :showTime="field.showTime ? field.showTime : false"
         :size="field.size ? field.size : null"
         :step="field.step ? field.step : '1'"
         :timeOnly="field.timeOnly ? field.timeOnly : false"

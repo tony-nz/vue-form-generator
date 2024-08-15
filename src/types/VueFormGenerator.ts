@@ -25,6 +25,7 @@ interface Field {
   filter?: boolean;
   formats?: Array<string>;
   hint?: string;
+  hourFormat?: string;
   insertHash?: boolean;
   id?: string;
   incrementButtonClass?: string;
@@ -48,6 +49,7 @@ interface Field {
   rows?: number;
   showButtons?: boolean;
   showSliderInput?: boolean;
+  showTime?: boolean;
   size?: string;
   step?: string;
   timeFormat?: string;
