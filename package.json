@@ -1,7 +1,7 @@
 {
   "name": "@tony-nz/vue-form-generator",
   "author": "Tony Myers",
-  "version": "1.6.5",
+  "version": "1.6.6",
   "private": false,
   "main": "dist/index.umd.js",
   "module": "dist/index.es.js",
