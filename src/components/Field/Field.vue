@@ -260,6 +260,7 @@ import {
   defineComponent,
   inject,
   onMounted,
+  onUnmounted,
   PropType,
   ref,
   watch,
@@ -316,6 +317,7 @@ export default defineComponent({
     const dropdownOptions: any = ref([]);
     const files = ref();
     const isMounted = ref(false);
+    const optionsUrl = ref();
     const options = inject(
       "vueFormGeneratorOptions"
     ) as VueFormGeneratorOptions;
@@ -418,7 +420,8 @@ export default defineComponent({
      * @returns apiData or localData or field.options
      */
     const getFieldOptions = (field: any) => {
-      if (field.optionsUrl) {
+      let optionsUrl = field.optionsUrl;
+      if (optionsUrl) {
         // Extract field names from the optionsUrl - /${date}/${id}
         const fieldNames = field.optionsUrl.match(/\${(.*?)}/g);
         if (fieldNames) {
@@ -426,7 +429,7 @@ export default defineComponent({
             const fieldNameWithoutBraces = fieldName
               .replace("${", "")
               .replace("}", "");
-            field.optionsUrl = field.optionsUrl.replace(
+            optionsUrl = optionsUrl.replace(
               fieldName,
               props.state.values[fieldNameWithoutBraces]
             );
@@ -436,7 +439,7 @@ export default defineComponent({
           Object.keys(dropdownOptions.value).length === 0 &&
           isMounted.value === true
         ) {
-          getData(field.optionsUrl, field.id, field.resource);
+          getData(optionsUrl, field.id, field.resource);
         }
         return dropdownOptions.value[field.id];
       } else if (field.localData) {
@@ -724,6 +727,10 @@ export default defineComponent({
      * onMounted
      */
     onMounted(() => {
+      if (props.field.optionsUrl) {
+        optionsUrl.value = props.field.optionsUrl;
+      }
+
       if (props.field.type == "address") {
         loadGoogleMaps().then(() => {
           addressService.value =
@@ -733,6 +740,33 @@ export default defineComponent({
       }
       isMounted.value = true;
     });
+
+    onUnmounted(() => {
+      // clear all local values
+      localValue.value = null;
+      isMounted.value = false;
+    });
+
+    // watch for changes in field.optionsUrl, fetch data
+    // watch(
+    //   () => props.field,
+    //   (newValue, oldValue) => {
+    //     if (newValue && newValue.optionsUrl !== oldValue.optionsUrl) {
+    //       if (
+    //         props.field.optionsUrl &&
+    //         props.field.id &&
+    //         props.field.resource
+    //       ) {
+    //         getData(
+    //           props.field.optionsUrl,
+    //           props.field.id,
+    //           props.field.resource
+    //         );
+    //       }
+    //     }
+    //   },
+    //   { deep: true }
+    // );
 
     return {
       addressPredictions,

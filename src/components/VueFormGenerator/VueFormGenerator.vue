@@ -199,15 +199,16 @@
                       />
                     </AccordionTab>
                   </Accordion>
-                  <Field
-                    v-else-if="field.id"
-                    @update="updateValue"
-                    :fetchData="fetchData"
-                    :field="field"
-                    :hiddenFields="hiddenFields"
-                    :state="state"
-                    :value="state.values[field.id]"
-                  />
+                  <template v-else-if="field.id && isFieldVisible(field)">
+                    <Field
+                      @update="updateValue"
+                      :fetchData="fetchData"
+                      :field="field"
+                      :hiddenFields="hiddenFields"
+                      :state="state"
+                      :value="state.values[field.id]"
+                    />
+                  </template>
                 </template>
               </template>
             </div>
@@ -305,7 +306,10 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, PropType, ref, watch } from "vue";
-import type { Form as VueFormGeneratorForm } from "../../types/VueFormGenerator";
+import type {
+  Field as FieldType,
+  Form as VueFormGeneratorForm,
+} from "../../types/VueFormGenerator";
 import Field from "../Field";
 import "../../style.css";
 
@@ -449,6 +453,41 @@ export default defineComponent({
     };
 
     /**
+     * isFieldVisible
+     * @param field
+     * @returns boolean
+     * This function checks if a field is visible
+     * based on the conditional property.
+     */
+    const isFieldVisible = (field: FieldType) => {
+      if (
+        !field.conditional ||
+        !field.conditional.field ||
+        !field.conditional.value
+      ) {
+        return true;
+      }
+      const conditionalValue = field.conditional.value;
+      const conditionalField = state.value.values[field.conditional.field];
+
+      // Check if the conditional value is a regex
+      if (conditionalValue instanceof RegExp) {
+        return conditionalValue.test(conditionalField);
+      }
+
+      if (Array.isArray(conditionalValue)) {
+        if (Array.isArray(conditionalField)) {
+          return conditionalValue.some((value) =>
+            conditionalField.includes(value)
+          );
+        } else {
+          return conditionalValue.includes(conditionalField);
+        }
+      }
+      return conditionalField === conditionalValue;
+    };
+
+    /**
      * Save data
      * @description emit data back
      * @param {string} fieldId - Field id
@@ -582,6 +621,7 @@ export default defineComponent({
     });
 
     return {
+      isFieldVisible,
       state,
       submitForm,
       updateValue,
