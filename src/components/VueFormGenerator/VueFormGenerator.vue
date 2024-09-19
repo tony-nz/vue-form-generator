@@ -184,12 +184,8 @@
             </div>
             <div class="grid grid-cols-12 gap-4">
               <template v-for="(field, index) in child.fields" :key="index">
-                <div
+                <template
                   v-if="!allowedFields || allowedFields?.includes(field?.id)"
-                  :class="[
-                    field.class ? field.class : 'col-span-12',
-                    field.id && isFieldHidden(field.id) ? 'hidden' : '',
-                  ]"
                 >
                   <Accordion v-if="field.display == 'accordion'" class="mt-4">
                     <AccordionTab :header="field.label">
@@ -208,10 +204,11 @@
                     @update="updateValue"
                     :fetchData="fetchData"
                     :field="field"
+                    :hiddenFields="hiddenFields"
                     :state="state"
                     :value="state.values[field.id]"
                   />
-                </div>
+                </template>
               </template>
             </div>
           </div>
@@ -542,14 +539,6 @@ export default defineComponent({
       return true;
     };
 
-    // check for hidden field
-    const isFieldHidden = (fieldId: string) => {
-      if (props.hiddenFields) {
-        return props.hiddenFields.includes(fieldId);
-      }
-      return false;
-    };
-
     // watch for changes in values, send back to parent
     watch(
       state.value.values,
@@ -593,7 +582,6 @@ export default defineComponent({
     });
 
     return {
-      isFieldHidden,
       state,
       submitForm,
       updateValue,
