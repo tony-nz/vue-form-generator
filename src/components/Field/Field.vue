@@ -14,239 +14,304 @@
       >
         {{ field.label }}
       </component>
-      <template v-if="field.type == 'address'">
-        <AutoComplete
-          v-model="addressValue"
-          :optionLabel="field.optionsLabel ? field.optionsLabel : 'name'"
-          :suggestions="addressPredictions"
-          @complete="searchAddress"
-          class="w-full"
-        >
-          <template #option="slotProps">
-            <div class="flex align-options-center">
-              <div @click="selectAddress(slotProps.option)">
-                {{
-                  field.optionsLabel
-                    ? slotProps.option[field.optionsLabel]
-                    : slotProps.option.description
-                }}
-              </div>
-            </div>
-          </template>
-        </AutoComplete>
-      </template>
-      <template v-else-if="field.type == 'time'">
-        <Calendar v-model="localValue" :name="field.id" timeOnly />
-      </template>
-      <template v-else-if="field.type == 'slider'">
-        <InputText
-          v-if="field.showSliderInput"
-          v-model.number="localValue"
-          class="w-full mb-2"
-        />
-        <Slider v-model="localValue" :step="field.step || 1" />
-      </template>
-      <template v-else-if="field.type == 'file'">
-        <FileUpload
-          :name="`${field.id}`"
-          :multiple="field.multiple || false"
-          :file-limit="field.maxFiles || null"
-          :custom-upload="true"
-          :preview-width="100"
-          :max-file-size="field.maxFileSize || 5000000"
-          :show-upload-button="false"
-          :show-cancel-button="false"
-          :accept="field.fileType || null"
-          :class="{
-            'border-red-500 border rounded': state.errors[field.id],
-          }"
-          @select="setFileFieldValue(field, $event)"
-          @upload="onUpload"
-        >
-          <template #empty>
-            <p>
-              {{ field.placeholder || "Drag and drop file here to upload." }}
-            </p>
-          </template>
-        </FileUpload>
-        <ProgressBar
-          v-if="state.uploadProgress[field.id]"
-          :value="state.uploadProgress[field.id]"
-          class="mt-2"
-        />
-        <p v-if="state.uploadErrors[field.id]" class="mt-2 text-red-600">
-          {{ state.uploadErrors[field.id] }}
-        </p>
-      </template>
-      <template v-else-if="field.type == 'switch'">
-        <div class="flex items-start">
-          <div class="flex items-center h-5">
-            <InputSwitch
-              v-model="localValue"
-              :value="localValue"
-              :name="field.id"
-              :required="field.required"
-              :class="{
-                'input w-full': !(
-                  field.type === 'switch' || field.type === 'number'
-                )
-                  ? true
-                  : false,
-              }"
-              :trueValue="1"
-              :falseValue="0"
-              class="dark:border-none"
-            />
-          </div>
-          <div class="ml-3 text-sm">
-            <label :for="field.id" class="font-medium text-gray-700">{{
-              field.label
-            }}</label>
-            <p class="text-gray-500">
-              {{ field.placeholder }}
-            </p>
-            <span
-              v-if="
-                Object.keys(state.errors).length > 0 && state.errors[field.id]
-              "
-              class="text-red-700"
-            >
-              {{ state.errors[field.id] }}
-            </span>
-          </div>
-        </div>
-      </template>
-      <template v-else-if="field.type === 'radio'">
+      <div class="relative">
         <div
-          v-for="option of field.options"
-          :key="option.id"
-          class="field-radiobutton"
+          v-if="isLoading"
+          class="absolute inset-0 bg-black bg-opacity-10 flex items-center justify-center z-50"
         >
-          <RadioButton
-            :inputId="formatValue(option)"
-            :name="field.id"
-            :value="formatValue(option)"
-            :required="field.required"
-            v-model="localValue"
-          />
-          <label :for="option" class="ml-2">{{ formatOption(option) }}</label>
+          <div class="text-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              class="w-8 h-8"
+            >
+              <g
+                fill="none"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+              >
+                <path
+                  stroke-dasharray="16"
+                  stroke-dashoffset="16"
+                  d="M12 3c4.97 0 9 4.03 9 9"
+                >
+                  <animate
+                    fill="freeze"
+                    attributeName="stroke-dashoffset"
+                    dur="0.3s"
+                    values="16;0"
+                  />
+                  <animateTransform
+                    attributeName="transform"
+                    dur="1.5s"
+                    repeatCount="indefinite"
+                    type="rotate"
+                    values="0 12 12;360 12 12"
+                  />
+                </path>
+                <path
+                  stroke-dasharray="64"
+                  stroke-dashoffset="64"
+                  stroke-opacity="0.3"
+                  d="M12 3c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9c0 -4.97 4.03 -9 9 -9Z"
+                >
+                  <animate
+                    fill="freeze"
+                    attributeName="stroke-dashoffset"
+                    dur="1.2s"
+                    values="64;0"
+                  />
+                </path>
+              </g>
+            </svg>
+          </div>
         </div>
-        <span
-          v-if="Object.keys(state.errors).length > 0 && state.errors[field.id]"
-          class="text-red-700"
+        <template v-if="field.type == 'address'">
+          <AutoComplete
+            v-model="addressValue"
+            :optionLabel="field.optionsLabel ? field.optionsLabel : 'name'"
+            :suggestions="addressPredictions"
+            @complete="searchAddress"
+            class="w-full"
+          >
+            <template #option="slotProps">
+              <div class="flex align-options-center">
+                <div @click="selectAddress(slotProps.option)">
+                  {{
+                    field.optionsLabel
+                      ? slotProps.option[field.optionsLabel]
+                      : slotProps.option.description
+                  }}
+                </div>
+              </div>
+            </template>
+          </AutoComplete>
+        </template>
+        <template v-else-if="field.type == 'time'">
+          <Calendar v-model="localValue" :name="field.id" timeOnly />
+        </template>
+        <template v-else-if="field.type == 'slider'">
+          <InputText
+            v-if="field.showSliderInput"
+            v-model.number="localValue"
+            class="w-full mb-2"
+          />
+          <Slider v-model="localValue" :step="field.step || 1" />
+        </template>
+        <template v-else-if="field.type == 'file'">
+          <FileUpload
+            :name="`${field.id}`"
+            :multiple="field.multiple || false"
+            :file-limit="field.maxFiles || null"
+            :custom-upload="true"
+            :preview-width="100"
+            :max-file-size="field.maxFileSize || 5000000"
+            :show-upload-button="false"
+            :show-cancel-button="false"
+            :accept="field.fileType || null"
+            :class="{
+              'border-red-500 border rounded': state.errors[field.id],
+            }"
+            @select="setFileFieldValue(field, $event)"
+            @upload="onUpload"
+          >
+            <template #empty>
+              <p>
+                {{ field.placeholder || "Drag and drop file here to upload." }}
+              </p>
+            </template>
+          </FileUpload>
+          <ProgressBar
+            v-if="state.uploadProgress[field.id]"
+            :value="state.uploadProgress[field.id]"
+            class="mt-2"
+          />
+          <p v-if="state.uploadErrors[field.id]" class="mt-2 text-red-600">
+            {{ state.uploadErrors[field.id] }}
+          </p>
+        </template>
+        <template v-else-if="field.type == 'switch'">
+          <div class="flex items-start">
+            <div class="flex items-center h-5">
+              <InputSwitch
+                v-model="localValue"
+                :value="localValue"
+                :name="field.id"
+                :required="field.required"
+                :class="{
+                  'input w-full': !(
+                    field.type === 'switch' || field.type === 'number'
+                  )
+                    ? true
+                    : false,
+                }"
+                :trueValue="1"
+                :falseValue="0"
+                class="dark:border-none"
+              />
+            </div>
+            <div class="ml-3 text-sm">
+              <label :for="field.id" class="font-medium text-gray-700">{{
+                field.label
+              }}</label>
+              <p class="text-gray-500">
+                {{ field.placeholder }}
+              </p>
+              <span
+                v-if="
+                  Object.keys(state.errors).length > 0 && state.errors[field.id]
+                "
+                class="text-red-700"
+              >
+                {{ state.errors[field.id] }}
+              </span>
+            </div>
+          </div>
+        </template>
+        <template v-else-if="field.type === 'radio'">
+          <div
+            v-for="option of field.options"
+            :key="option.id"
+            class="field-radiobutton"
+          >
+            <RadioButton
+              :inputId="formatValue(option)"
+              :name="field.id"
+              :value="formatValue(option)"
+              :required="field.required"
+              v-model="localValue"
+            />
+            <label :for="option" class="ml-2">{{ formatOption(option) }}</label>
+          </div>
+          <span
+            v-if="
+              Object.keys(state.errors).length > 0 && state.errors[field.id]
+            "
+            class="text-red-700"
+          >
+            {{ state.errors[field.id] }}
+          </span>
+        </template>
+        <div
+          v-else-if="
+            field.type === 'colorpicker' || field.type === 'colourpicker'
+          "
+          class="flex justify-stretch space-x-2"
         >
-          {{ state.errors[field.id] }}
-        </span>
-      </template>
-      <div
-        v-else-if="
-          field.type === 'colorpicker' || field.type === 'colourpicker'
-        "
-        class="flex justify-stretch space-x-2"
-      >
-        <ColorPicker
-          v-model="localValue"
-          :inputId="field.id"
-          :name="field.id"
-          :required="field.required"
-          :class="{
-            'p-invalid': state.errors[field.id],
-          }"
-        />
-        <InputText
-          v-model="localValue"
-          :name="field.id"
-          :required="field.required"
-          :class="{
-            'p-invalid': state.errors[field.id],
-          }"
-          class="w-full"
-        />
-        <span
-          v-if="Object.keys(state.errors).length > 0 && state.errors[field.id]"
-          class="text-red-700"
-        >
-          {{ state.errors[field.id] }}
-        </span>
+          <ColorPicker
+            v-model="localValue"
+            :inputId="field.id"
+            :name="field.id"
+            :required="field.required"
+            :class="{
+              'p-invalid': state.errors[field.id],
+            }"
+          />
+          <InputText
+            v-model="localValue"
+            :name="field.id"
+            :required="field.required"
+            :class="{
+              'p-invalid': state.errors[field.id],
+            }"
+            class="w-full"
+          />
+          <span
+            v-if="
+              Object.keys(state.errors).length > 0 && state.errors[field.id]
+            "
+            class="text-red-700"
+          >
+            {{ state.errors[field.id] }}
+          </span>
+        </div>
+        <template v-else>
+          <component
+            v-if="field && field.type"
+            v-model="localValue"
+            :auto-clear="false"
+            :buttonLayout="
+              field.buttonLayout ? field.buttonLayout : 'horizontal'
+            "
+            :class="
+              Object.assign(
+                {
+                  'input w-full': !(
+                    field.type === 'switch' || field.type === 'number'
+                  ),
+                  'p-invalid': state.errors[field.id],
+                },
+                field.class !== undefined
+                  ? field.class
+                  : { 'dark:bg-slate-900 dark:border-none': true }
+              )
+            "
+            :currency="field.currency ? field.currency : 'NZD'"
+            :date-format="field.dateFormat ? field.dateFormat : 'dd/mm/yy'"
+            :decrementButtonClass="
+              field.decrementButtonClass
+                ? field.decrementButtonClass
+                : 'p-button-danger'
+            "
+            :decrementButtonIcon="
+              field.decrementButtonIcon
+                ? field.decrementButtonIcon
+                : 'pi pi-minus'
+            "
+            :display="field.display ? field.display : 'chip'"
+            :editorStyle="field.editorStyle"
+            :falseValue="0"
+            :filter="field.filter ? field.filter : false"
+            :formats="field.formats"
+            :hourFormat="field.hourFormat ? field.hourFormat : '12'"
+            :incrementButtonClass="
+              field.incrementButtonClass
+                ? field.incrementButtonClass
+                : 'p-button-success'
+            "
+            :incrementButtonIcon="
+              field.incrementButtonIcon
+                ? field.incrementButtonIcon
+                : 'pi pi-plus'
+            "
+            :is="getComponent(field.type)"
+            :max="100"
+            :min-date="field.minDate ? field.minDate : null"
+            :max-date="field.maxDate ? field.maxDate : null"
+            :min="0"
+            :mode="field.mode ? field.mode : 'decimal'"
+            :name="field.id"
+            :optionLabel="field.optionsLabel ? field.optionsLabel : 'name'"
+            :optionValue="field.optionValue ? field.optionValue : 'id'"
+            :options="getFieldOptions(field)"
+            :placeholder="field.placeholder || 'Please select...'"
+            :readonly="field.readonly"
+            :required="field.required"
+            :rows="field.rows ? field.rows : 3"
+            :showButtons="field.showButtons ? field.showButtons : false"
+            :showTime="field.showTime ? field.showTime : false"
+            :size="field.size ? field.size : null"
+            :step="field.step ? field.step : '1'"
+            :timeOnly="field.timeOnly ? field.timeOnly : false"
+            :trueValue="1"
+            :value="localValue"
+          >
+            <template #option="slotProps">
+              <slot name="option" v-bind:slotProps="slotProps" />
+            </template>
+          </component>
+          <span
+            v-if="
+              Object.keys(state.errors).length > 0 && state.errors[field.id]
+            "
+            class="text-red-700"
+          >
+            {{ state.errors[field.id] }}
+          </span>
+        </template>
       </div>
-      <template v-else>
-        <component
-          v-if="field && field.type"
-          v-model="localValue"
-          :auto-clear="false"
-          :buttonLayout="field.buttonLayout ? field.buttonLayout : 'horizontal'"
-          :class="
-            Object.assign(
-              {
-                'input w-full': !(
-                  field.type === 'switch' || field.type === 'number'
-                ),
-                'p-invalid': state.errors[field.id],
-              },
-              field.class !== undefined
-                ? field.class
-                : { 'dark:bg-slate-900 dark:border-none': true }
-            )
-          "
-          :currency="field.currency ? field.currency : 'NZD'"
-          :date-format="field.dateFormat ? field.dateFormat : 'dd/mm/yy'"
-          :decrementButtonClass="
-            field.decrementButtonClass
-              ? field.decrementButtonClass
-              : 'p-button-danger'
-          "
-          :decrementButtonIcon="
-            field.decrementButtonIcon
-              ? field.decrementButtonIcon
-              : 'pi pi-minus'
-          "
-          :display="field.display ? field.display : 'chip'"
-          :editorStyle="field.editorStyle"
-          :falseValue="0"
-          :filter="field.filter ? field.filter : false"
-          :formats="field.formats"
-          :hourFormat="field.hourFormat ? field.hourFormat : '12'"
-          :incrementButtonClass="
-            field.incrementButtonClass
-              ? field.incrementButtonClass
-              : 'p-button-success'
-          "
-          :incrementButtonIcon="
-            field.incrementButtonIcon ? field.incrementButtonIcon : 'pi pi-plus'
-          "
-          :is="getComponent(field.type)"
-          :max="100"
-          :min-date="field.minDate ? field.minDate : null"
-          :max-date="field.maxDate ? field.maxDate : null"
-          :min="0"
-          :mode="field.mode ? field.mode : 'decimal'"
-          :name="field.id"
-          :optionLabel="field.optionsLabel ? field.optionsLabel : 'name'"
-          :optionValue="field.optionValue ? field.optionValue : 'id'"
-          :options="getFieldOptions(field)"
-          :placeholder="field.placeholder || 'Please select...'"
-          :readonly="field.readonly"
-          :required="field.required"
-          :rows="field.rows ? field.rows : 3"
-          :showButtons="field.showButtons ? field.showButtons : false"
-          :showTime="field.showTime ? field.showTime : false"
-          :size="field.size ? field.size : null"
-          :step="field.step ? field.step : '1'"
-          :timeOnly="field.timeOnly ? field.timeOnly : false"
-          :trueValue="1"
-          :value="localValue"
-        >
-          <template #option="slotProps">
-            <slot name="option" v-bind:slotProps="slotProps" />
-          </template>
-        </component>
-        <span
-          v-if="Object.keys(state.errors).length > 0 && state.errors[field.id]"
-          class="text-red-700"
-        >
-          {{ state.errors[field.id] }}
-        </span>
-      </template>
       <p v-if="field.hint" class="mt-2 text-sm italic text-gray-500">
         {{ field.hint }}
       </p>
@@ -316,6 +381,7 @@ export default defineComponent({
     const addressGeocoder = ref();
     const dropdownOptions: any = ref([]);
     const files = ref();
+    const isLoading = ref(false);
     const isMounted = ref(false);
     const optionsUrl = ref();
     const options = inject(
@@ -397,16 +463,20 @@ export default defineComponent({
         inject("vueFormGeneratorOptions");
       setTimeout(() => {
         if (props.fetchData) {
+          isLoading.value = true;
           props.fetchData({ url, fieldId, resource }).then((data: any) => {
+            isLoading.value = false;
             dropdownOptions.value[fieldId] = data;
           });
         } else if (
           vueFormGeneratorOptions &&
           typeof vueFormGeneratorOptions.defaultFetchData == "function"
         ) {
+          isLoading.value = true;
           vueFormGeneratorOptions
             .defaultFetchData({ url, fieldId, resource })
             .then((data: any) => {
+              isLoading.value = false;
               dropdownOptions.value[fieldId] = data;
             });
         }
@@ -780,6 +850,7 @@ export default defineComponent({
       files,
       isFieldHidden,
       isFieldVisible,
+      isLoading,
       isMounted,
       localValue,
       onUpload,
