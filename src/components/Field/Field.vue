@@ -462,7 +462,7 @@ export default defineComponent({
       const vueFormGeneratorOptions: VueFormGeneratorOptions | undefined =
         inject("vueFormGeneratorOptions");
       setTimeout(() => {
-        if (props.fetchData) {
+        if (props.fetchData && isLoading.value === false) {
           isLoading.value = true;
           props.fetchData({ url, fieldId, resource }).then((data: any) => {
             isLoading.value = false;
@@ -472,13 +472,15 @@ export default defineComponent({
           vueFormGeneratorOptions &&
           typeof vueFormGeneratorOptions.defaultFetchData == "function"
         ) {
-          isLoading.value = true;
-          vueFormGeneratorOptions
-            .defaultFetchData({ url, fieldId, resource })
-            .then((data: any) => {
-              isLoading.value = false;
-              dropdownOptions.value[fieldId] = data;
-            });
+          if (isLoading.value === false) {
+            isLoading.value = true;
+            vueFormGeneratorOptions
+              .defaultFetchData({ url, fieldId, resource })
+              .then((data: any) => {
+                isLoading.value = false;
+                dropdownOptions.value[fieldId] = data;
+              });
+          }
         }
         return dropdownOptions.value[fieldId];
       }, 1);
