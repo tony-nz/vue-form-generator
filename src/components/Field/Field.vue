@@ -260,6 +260,8 @@
                 ? field.decrementButtonIcon
                 : 'pi pi-minus'
             "
+            :disabledDays="field.disabledDays ? field.disabledDays : null"
+            :disabledDates="field.disabledDates ? field.disabledDates : null"
             :display="field.display ? field.display : 'chip'"
             :editorStyle="field.editorStyle"
             :falseValue="0"

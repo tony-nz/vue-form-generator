@@ -19,6 +19,8 @@ interface Field {
   decrementButtonClass?: string;
   decrementButtonIcon?: string;
   disabled?: boolean;
+  disabledDays?: Array<number>;
+  disabledDates?: Array<string>;
   display?: string;
   editorStyle?: string;
   fileType?: string;
