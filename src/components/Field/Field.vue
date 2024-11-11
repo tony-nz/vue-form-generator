@@ -4,6 +4,7 @@
       :class="[
         field.class ? field.class : 'col-span-12',
         field.id && isFieldHidden(field.id) ? 'hidden' : '',
+        field.type == 'switch' ? 'flex items-center pt-[18px]' : '',
       ]"
     >
       <component
