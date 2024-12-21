@@ -91,7 +91,7 @@
           </AutoComplete>
         </template>
         <template v-else-if="field.type == 'time'">
-          <Calendar v-model="localValue" :name="field.id" timeOnly />
+          <DatePicker v-model="localValue" :name="field.id" timeOnly />
         </template>
         <template v-else-if="field.type == 'slider'">
           <InputText
@@ -136,7 +136,7 @@
         <template v-else-if="field.type == 'switch'">
           <div class="flex items-start">
             <div class="flex items-center h-5">
-              <InputSwitch
+              <ToggleSwitch
                 v-model="localValue"
                 :value="localValue"
                 :name="field.id"
@@ -433,7 +433,7 @@ export default defineComponent({
         case "checkbox":
           return "Checkbox";
         case "date":
-          return "Calendar";
+          return "DatePicker";
         case "editor":
           return "Editor";
         case "multiselect":
@@ -443,9 +443,9 @@ export default defineComponent({
         case "radio":
           return "RadioButton";
         case "select":
-          return "Dropdown";
+          return "Select";
         case "switch":
-          return "InputSwitch";
+          return "ToggleSwitch";
         case "textarea":
           return "Textarea";
         case "text":
