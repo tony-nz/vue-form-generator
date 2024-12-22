@@ -148,8 +148,6 @@
                     ? true
                     : false,
                 }"
-                :trueValue="1"
-                :falseValue="0"
                 class="dark:border-none"
               />
             </div>
@@ -265,7 +263,6 @@
             :disabledDates="field.disabledDates ? field.disabledDates : null"
             :display="field.display ? field.display : 'chip'"
             :editorStyle="field.editorStyle"
-            :falseValue="0"
             :filter="field.filter ? field.filter : false"
             :formats="field.formats"
             :hourFormat="field.hourFormat ? field.hourFormat : '12'"
@@ -298,7 +295,6 @@
             :size="field.size ? field.size : null"
             :step="field.step ? field.step : '1'"
             :timeOnly="field.timeOnly ? field.timeOnly : false"
-            :trueValue="1"
             :value="localValue"
           >
             <template #option="slotProps">
